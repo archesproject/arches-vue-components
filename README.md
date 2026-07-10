@@ -2,6 +2,13 @@
 
 A Vue 3 / PrimeVue component library for building custom Arches applications.
 
+> [!IMPORTANT]
+> **Upgrading a project that previously had `arches-component-lab` installed?** That package is retired in favor of this one, and `WidgetMapping` moved with it. Before running `migrate`, run:
+> ```
+> python manage.py resolve_component_lab_migration_history
+> ```
+> Skipping this will make `migrate` fail with `InconsistentMigrationHistory` on any project that already applied `arches_component_lab`'s migrations. The command applies `arches_vue_components`'s own migrations directly and re-syncs any widget mappings other installed apps previously registered against `arches_component_lab.WidgetMapping`, without touching those apps' migration history. It's safe to run more than once.
+
 ## Installation
 
 ```
