@@ -1,6 +1,6 @@
 [run]
 source =
-    arches_component_lab/
+    arches_vue_components/
 
 omit =
     */python?.?/*

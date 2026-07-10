@@ -3,8 +3,8 @@ requires = [ "setuptools>=77", "setuptools-scm",]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "arches-component-lab"
-version = "0.0.1a14"
+name = "arches-vue-components"
+version = "1.0.0"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "AGPL-3.0-or-later"
@@ -34,11 +34,11 @@ name = "Arches Project"
 [project.urls]
 Homepage = "https://archesproject.org/"
 Documentation = "https://arches.readthedocs.io"
-Repository = "https://github.com/archesproject/arches-component-lab.git"
-Issues = "https://github.com/archesproject/arches-component-lab/issues"
+Repository = "https://github.com/archesproject/arches-vue-components.git"
+Issues = "https://github.com/archesproject/arches-vue-components/issues"
 
 [project.optional-dependencies]
 dev = [ "black==24.4.2", "coverage", "django-silk==5.1.0", "livereload", "pre-commit==3.8.0", "sst",]
 
 [tool.setuptools]
-packages = [ "arches_component_lab",]
+packages = [ "arches_vue_components",]

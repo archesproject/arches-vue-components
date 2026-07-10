@@ -18,12 +18,12 @@ repos:
         name: prettier
         entry: npm run prettier:fix
         language: system
-        files: arches_component_lab/src
+        files: arches_vue_components/src
       - id: eslint
         name: eslint
         entry: npm run eslint:fix
         language: system
-        files: arches_component_lab/src
+        files: arches_vue_components/src
       - id: typescript
         name: typescript
         entry: bash -c 'npm run ts:check'

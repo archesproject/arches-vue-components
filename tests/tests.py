@@ -4,8 +4,8 @@ from django.core import management
 from django.test.utils import captured_stdout
 
 from arches.app.models.models import Widget
-from arches_component_lab.models import WidgetMapping
-from arches_component_lab.utils.widget_synchronizer import WidgetSynchronizer
+from arches_vue_components.models import WidgetMapping
+from arches_vue_components.utils.widget_synchronizer import WidgetSynchronizer
 
 
 class WidgetSynchronizerTestCase(TestCase):
@@ -60,7 +60,7 @@ class WidgetSynchronizerTestCase(TestCase):
         )
         synchronizer = WidgetSynchronizer()
         expected_component_path_0 = (
-            "arches_component_lab/widgets/DummyWidget/DummyWidget.vue"
+            "arches_vue_components/widgets/DummyWidget/DummyWidget.vue"
         )
 
         mapping_0 = synchronizer.add_mapping(
@@ -77,5 +77,5 @@ class WidgetSynchronizerTestCase(TestCase):
             management.call_command("validate", "--codes", "2001", "--verbosity", "2")
             output = stdout.getvalue()
             self.assertIn(
-                "Widgets without a mapping to a Component Lab Vue component", output
+                "Widgets without a mapping to an Arches Vue Components Vue component", output
             )
