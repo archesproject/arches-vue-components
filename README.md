@@ -1,41 +1,41 @@
-# Arches Component Lab
+# Arches Vue Components
 
 A Vue 3 / PrimeVue component library for building custom Arches applications.
 
 ## Installation
 
 ```
-pip install arches-component-lab
+pip install arches-vue-components
 ```
 
 ## Project Configuration
 
 1. If you do not already have an Arches project, create one by following the instructions in the Arches [documentation](http://archesproject.org/documentation/).
 
-2. Add `arches_querysets` and `arches_component_lab` to `INSTALLED_APPS` below the name of your project but above `arches`. For Arches >= 8.x, also add `pgtrigger`:
+2. Add `arches_querysets` and `arches_vue_components` to `INSTALLED_APPS` below the name of your project but above `arches`. For Arches >= 8.x, also add `pgtrigger`:
 ```python
 INSTALLED_APPS = (
     "my_project_name",
     ...
     "arches_querysets",
-    "arches_component_lab",
+    "arches_vue_components",
     "arches",
     ...
     "pgtrigger",
 )
 ```
 
-3. Add `arches_component_lab` as a dependency in `package.json`:
+3. Add `arches_vue_components` as a dependency in `package.json`:
 ```json
 "dependencies": {
-    "arches_component_lab": "archesproject/arches-component-lab#main"
+    "arches_vue_components": "archesproject/arches-vue-components#main"
 }
 ```
 
-4. Add the `arches_component_lab` URLs to `urls.py`:
+4. Add the `arches_vue_components` URLs to `urls.py`:
 ```python
 urlpatterns = [
-    path("", include("arches_component_lab.urls")),
+    path("", include("arches_vue_components.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ```
 
@@ -51,7 +51,7 @@ npm install && npm run build_development
 ```
 python manage.py validate --codes 2001 --verbosity 2
 ```
-See [Extending Arches Component Lab](#extending-arches-component-lab) if any are missing.
+See [Extending Arches Vue Components](#extending-arches-vue-components) if any are missing.
 
 
 ## Frontend API
@@ -61,23 +61,23 @@ See [Extending Arches Component Lab](#extending-arches-component-lab) if any are
 ```typescript
 import MyComponent from '@/my_project/MyComponent.vue';
 
-import { createVueApplication } from '@/arches_component_lab/application';
+import { createVueApplication } from '@/arches_vue_components/application';
 
 createVueApplication({ component: MyComponent }).then(app => app.mount('#app'));
 ```
 
 ### Widgets
 
-`GenericWidget` looks up the widget mapped to a node (see [Extending Arches Component Lab](#extending-arches-component-lab)) and resolves the real component at runtime. In `edit` mode it wraps the resolved widget in a `GenericFormField`, which registers the node as a PrimeVue Forms `FormField` keyed by `nodeAlias`, ties its dirty/touched state and validation errors into an ancestor `<Form>`, and renders those errors:
+`GenericWidget` looks up the widget mapped to a node (see [Extending Arches Vue Components](#extending-arches-vue-components)) and resolves the real component at runtime. In `edit` mode it wraps the resolved widget in a `GenericFormField`, which registers the node as a PrimeVue Forms `FormField` keyed by `nodeAlias`, ties its dirty/touched state and validation errors into an ancestor `<Form>`, and renders those errors:
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import GenericWidget from '@/arches_component_lab/generics/GenericWidget/GenericWidget.vue';
+import GenericWidget from '@/arches_vue_components/generics/GenericWidget/GenericWidget.vue';
 
-import type { WidgetMode } from '@/arches_component_lab/widgets';
-import type { AliasedNodeData } from '@/arches_component_lab/generics';
+import type { WidgetMode } from '@/arches_vue_components/widgets';
+import type { AliasedNodeData } from '@/arches_vue_components/generics';
 
 const MODE: WidgetMode = 'edit';
 const nodeData = ref<AliasedNodeData | null>(null);
@@ -112,10 +112,10 @@ Importing a widget directly skips the runtime resolution and the `FormField` int
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { TextWidget } from '@/arches_component_lab/widgets';
+import { TextWidget } from '@/arches_vue_components/widgets';
 
-import type { WidgetMode } from '@/arches_component_lab/widgets';
-import type { StringAliasedNodeData } from '@/arches_component_lab/datatypes';
+import type { WidgetMode } from '@/arches_vue_components/widgets';
+import type { StringAliasedNodeData } from '@/arches_vue_components/datatypes';
 
 const MODE: WidgetMode = 'edit';
 const nodeData = ref<StringAliasedNodeData | null>(null);
@@ -138,9 +138,9 @@ const nodeData = ref<StringAliasedNodeData | null>(null);
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import GenericCard from '@/arches_component_lab/generics/GenericCard/GenericCard.vue';
+import GenericCard from '@/arches_vue_components/generics/GenericCard/GenericCard.vue';
 
-import type { AliasedTileData } from '@/arches_component_lab/generics';
+import type { AliasedTileData } from '@/arches_vue_components/generics';
 
 const tileData = ref<AliasedTileData>();
 </script>
@@ -162,14 +162,14 @@ const tileData = ref<AliasedTileData>();
 
 ### Reference
 
-#### `@/arches_component_lab/widgets`
+#### `@/arches_vue_components/widgets`
 
 | Name | Type | Description |
 |------|------|--------------|
 | `WidgetMode` | `'edit' \| 'view' \| 'configure'` | The three states a widget can render in |
 | `BaseWidgetProps` | `{ mode: WidgetMode; nodeAlias?: string; graphSlug?: string }` | Props every widget accepts |
 
-Every widget's `aliasedNodeData`/`cardXNodeXWidgetData` prop is typed to one specific datatype. Where no widget-specific `cardXNodeXWidgetData` type is listed, the widget uses the base `CardXNodeXWidgetData` (no extra config fields). Both columns import from `@/arches_component_lab/datatypes`:
+Every widget's `aliasedNodeData`/`cardXNodeXWidgetData` prop is typed to one specific datatype. Where no widget-specific `cardXNodeXWidgetData` type is listed, the widget uses the base `CardXNodeXWidgetData` (no extra config fields). Both columns import from `@/arches_vue_components/datatypes`:
 
 | Widget | `aliasedNodeData` type | `cardXNodeXWidgetData` type |
 |--------|-------------------------|-------------------------------|
@@ -192,7 +192,7 @@ Every widget's `aliasedNodeData`/`cardXNodeXWidgetData` prop is typed to one spe
 | `URLWidget` | `URLAliasedNodeData` | `CardXNodeXWidgetData` |
 | `MapWidget` | `GeoJSONFeatureCollectionAliasedNodeData` | `MapCardXNodeXWidgetData` |
 
-#### `@/arches_component_lab/generics`
+#### `@/arches_vue_components/generics`
 
 `GenericWidget`/`GenericCard` resolve their concrete component at runtime instead of being imported directly — that is the "generic" here, not a TypeScript `<T>`.
 
@@ -230,7 +230,7 @@ Every widget's `aliasedNodeData`/`cardXNodeXWidgetData` prop is typed to one spe
 | `tileData` | `AliasedTileData` | Pre-fetched tile; skips `GenericCard`'s own fetch |
 | `tileId` | `string \| null` | Tile to fetch when `tileData` is not provided |
 
-#### `@/arches_component_lab/datatypes`
+#### `@/arches_vue_components/datatypes`
 
 `*AliasedNodeData` types are listed in the widget table above. Supporting types:
 
@@ -242,7 +242,7 @@ Every widget's `aliasedNodeData`/`cardXNodeXWidgetData` prop is typed to one spe
 | `ResourceInstanceReference` | Resource instance link reference |
 | `DomainOption` | Domain value option |
 
-#### `@/arches_component_lab/application`
+#### `@/arches_vue_components/application`
 
 | Name | Type |
 |------|------|
@@ -250,7 +250,7 @@ Every widget's `aliasedNodeData`/`cardXNodeXWidgetData` prop is typed to one spe
 | `generateArchesURL` | `(urlName: string, urlParameters?: Record<string, string \| number>, queryParameters?: Record<string, string \| number>, languageCode?: string) => string` |
 | `CreateVueApplicationOptions` | `{ component: Component; themeConfiguration?: ArchesThemeConfiguration; initialProps?: Record<string, unknown> }` |
 
-#### `@/arches_component_lab/themes`
+#### `@/arches_vue_components/themes`
 
 | Name | Type | Description |
 |------|------|--------------|
@@ -264,11 +264,11 @@ A widget is an editor/viewer pair plus a dispatcher that picks between them by `
 
 1. Create `widgets/RatingWidget/` with a `types.ts` extending `BaseWidgetProps`:
 ```ts
-import type { BaseWidgetProps } from "@/arches_component_lab/widgets/types.ts";
+import type { BaseWidgetProps } from "@/arches_vue_components/widgets/types.ts";
 import type {
     NumberAliasedNodeData,
     NumberCardXNodeXWidgetData,
-} from "@/arches_component_lab/datatypes/number/types.ts";
+} from "@/arches_vue_components/datatypes/number/types.ts";
 
 export interface RatingWidgetProps extends BaseWidgetProps {
     cardXNodeXWidgetData?: NumberCardXNodeXWidgetData;
@@ -282,14 +282,14 @@ export interface RatingWidgetProps extends BaseWidgetProps {
 <script setup lang="ts">
 import { computed } from "vue";
 
-import RatingWidgetEditor from "@/arches_component_lab/widgets/RatingWidget/components/RatingWidgetEditor.vue";
-import RatingWidgetViewer from "@/arches_component_lab/widgets/RatingWidget/components/RatingWidgetViewer.vue";
+import RatingWidgetEditor from "@/arches_vue_components/widgets/RatingWidget/components/RatingWidgetEditor.vue";
+import RatingWidgetViewer from "@/arches_vue_components/widgets/RatingWidget/components/RatingWidgetViewer.vue";
 
-import { EDIT, VIEW } from "@/arches_component_lab/widgets/constants.ts";
-import { buildNumberAliasedNodeData } from "@/arches_component_lab/datatypes/number/utils.ts";
+import { EDIT, VIEW } from "@/arches_vue_components/widgets/constants.ts";
+import { buildNumberAliasedNodeData } from "@/arches_vue_components/datatypes/number/utils.ts";
 
-import type { NumberAliasedNodeData } from "@/arches_component_lab/datatypes/number/types.ts";
-import type { RatingWidgetProps } from "@/arches_component_lab/widgets/RatingWidget/types.ts";
+import type { NumberAliasedNodeData } from "@/arches_vue_components/datatypes/number/types.ts";
+import type { RatingWidgetProps } from "@/arches_vue_components/widgets/RatingWidget/types.ts";
 
 const { aliasedNodeData, value } = defineProps<RatingWidgetProps>();
 
@@ -332,9 +332,9 @@ function onUpdateAliasedNodeData(updated: NumberAliasedNodeData) {
 import { onMounted } from "vue";
 import Rating from "primevue/rating";
 
-import { buildNumberAliasedNodeData } from "@/arches_component_lab/datatypes/number/utils.ts";
+import { buildNumberAliasedNodeData } from "@/arches_vue_components/datatypes/number/utils.ts";
 
-import type { NumberAliasedNodeData } from "@/arches_component_lab/datatypes/number/types.ts";
+import type { NumberAliasedNodeData } from "@/arches_vue_components/datatypes/number/types.ts";
 
 const { aliasedNodeData } = defineProps<{
     aliasedNodeData: NumberAliasedNodeData | null;
@@ -366,7 +366,7 @@ function onUpdateModelValue(updatedValue: number | null) {
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import type { NumberAliasedNodeData } from "@/arches_component_lab/datatypes/number/types.ts";
+import type { NumberAliasedNodeData } from "@/arches_vue_components/datatypes/number/types.ts";
 
 const { aliasedNodeData } = defineProps<{ aliasedNodeData: NumberAliasedNodeData }>();
 
@@ -380,24 +380,24 @@ onMounted(() => emit("initialized", aliasedNodeData));
 </template>
 ```
 
-4. Reuse an existing datatype module (`@/arches_component_lab/datatypes` — string, number, boolean, concept, domain, etc.) for the value shape, as above, or add a new one following the same `types.ts` + `build<Datatype>AliasedNodeData` `utils.ts` pattern.
+4. Reuse an existing datatype module (`@/arches_vue_components/datatypes` — string, number, boolean, concept, domain, etc.) for the value shape, as above, or add a new one following the same `types.ts` + `build<Datatype>AliasedNodeData` `utils.ts` pattern.
 
-5. If contributing to Arches Component Lab, export it from `widgets/index.ts`:
+5. If contributing to Arches Vue Components, export it from `widgets/index.ts`:
 ```ts
-export { default as RatingWidget } from "@/arches_component_lab/widgets/RatingWidget/RatingWidget.vue";
-export type { RatingWidgetProps } from "@/arches_component_lab/widgets/RatingWidget/types.ts";
+export { default as RatingWidget } from "@/arches_vue_components/widgets/RatingWidget/RatingWidget.vue";
+export type { RatingWidgetProps } from "@/arches_vue_components/widgets/RatingWidget/types.ts";
 ```
 
-6. Register it — see [Extending Arches Component Lab](#extending-arches-component-lab).
+6. Register it — see [Extending Arches Vue Components](#extending-arches-vue-components).
 
-## Extending Arches Component Lab
+## Extending Arches Vue Components
 
-Arches Component Lab uses the `WidgetMapping` model to map widgets to their Vue components. To check for missing mappings:
+Arches Vue Components uses the `WidgetMapping` model to map widgets to their Vue components. To check for missing mappings:
 ```
 python manage.py widget check_mappings
 ```
 
 To add a mapping:
 ```
-python manage.py widget add_mapping -wn language-select -cp arches_component_lab/widgets/LanguageSelectWidget/LanguageSelectWidget.vue
+python manage.py widget add_mapping -wn language-select -cp arches_vue_components/widgets/LanguageSelectWidget/LanguageSelectWidget.vue
 ```
