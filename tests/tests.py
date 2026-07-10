@@ -77,5 +77,6 @@ class WidgetSynchronizerTestCase(TestCase):
             management.call_command("validate", "--codes", "2001", "--verbosity", "2")
             output = stdout.getvalue()
             self.assertIn(
-                "Widgets without a mapping to an Arches Vue Components Vue component", output
+                "Widgets without a mapping to an Arches Vue Components Vue component",
+                output,
             )
