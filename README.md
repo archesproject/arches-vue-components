@@ -401,3 +401,66 @@ To add a mapping:
 ```
 python manage.py widget add_mapping -wn language-select -cp arches_vue_components/widgets/LanguageSelectWidget/LanguageSelectWidget.vue
 ```
+
+## Migrating a `WidgetMapping` Migration from `arches-component-lab`
+
+`arches_vue_components` is the renamed successor to `arches_component_lab`; the two are separate Django apps with independent migration histories, so a project migration that targets `arches_component_lab.WidgetMapping` (for example, a data migration registering a mapping for a custom widget) breaks once `arches_component_lab` is dropped from `INSTALLED_APPS`. Don't edit that migration in place to point at `arches_vue_components` — its slot in your migration history is already applied on real projects and can't be removed or repurposed. Instead:
+
+1. Edit the existing migration to be a no-op, and comment where the replacement lives:
+```python
+from django.db import migrations
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ("my_project", "0004_some_prior_migration"),
+    ]
+
+    # RatingWidget's mapping is registered by 0011_add_rating_widget_mapping
+    # instead, against arches_vue_components.WidgetMapping. This migration's
+    # slot can't be removed since it's already applied on real projects, so
+    # it's kept as a no-op.
+    operations = [
+        migrations.RunPython(migrations.RunPython.noop, migrations.RunPython.noop),
+    ]
+```
+
+2. Create a new migration that depends on `arches_vue_components` and re-creates the mapping against it:
+```python
+import uuid
+
+from django.db import migrations
+
+
+def create_rating_widget_mapping(apps, schema_editor):
+    WidgetMapping = apps.get_model("arches_vue_components", "WidgetMapping")
+
+    # first delete old mapping if it exists
+    WidgetMapping.objects.filter(widget_id="<widget-uuid>").delete()
+
+    WidgetMapping.objects.create(
+        id=uuid.uuid4(),
+        widget_id="<widget-uuid>",
+        component="my_project/widgets/RatingWidget/RatingWidget.vue",
+    )
+
+
+def revert_rating_widget_mapping(apps, schema_editor):
+    WidgetMapping = apps.get_model("arches_vue_components", "WidgetMapping")
+    WidgetMapping.objects.filter(widget_id="<widget-uuid>").delete()
+
+
+class Migration(migrations.Migration):
+    dependencies = [
+        ("my_project", "0010_some_later_migration"),
+        ("arches_vue_components", "0002_populate_widget_mappings"),
+    ]
+
+    operations = [
+        migrations.RunPython(
+            create_rating_widget_mapping,
+            revert_rating_widget_mapping,
+        ),
+    ]
+```
