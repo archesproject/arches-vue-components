@@ -10,14 +10,29 @@ import { buildNumberAliasedNodeData } from "@/arches_vue_components/datatypes/nu
 import type { NumberAliasedNodeData } from "@/arches_vue_components/datatypes/number/types.ts";
 import type { NumberWidgetProps } from "@/arches_vue_components/widgets/NumberWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<NumberWidgetProps>();
+const { aliasedNodeData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as NumberWidgetProps;
 
-const emit = defineEmits<{
-    "update:isDirty": [isDirty: boolean];
-    "update:value": [updatedValue: number | null];
-    "update:aliasedNodeData": [updatedValue: NumberAliasedNodeData];
-    initialized: [updatedValue: NumberAliasedNodeData];
-}>();
+const emit: {
+    (event: "update:isDirty", isDirty: boolean): void;
+    (event: "update:value", updatedValue: number | null): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: NumberAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: NumberAliasedNodeData): void;
+} = defineEmits([
+    "update:isDirty",
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]);
 
 const resolvedAliasedNodeData = computed(
     () => aliasedNodeData ?? buildNumberAliasedNodeData(value ?? null),

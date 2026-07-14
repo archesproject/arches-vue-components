@@ -5,13 +5,13 @@ import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 
-const { shouldShowHelpDrawer } = defineProps<{
+const { shouldShowHelpDrawer } = defineProps(["shouldShowHelpDrawer"]) as {
     shouldShowHelpDrawer: boolean;
-}>();
+};
 
-const emit = defineEmits<{
+const emit = defineEmits(["update:shouldShowHelpDrawer"]) as {
     (event: "update:shouldShowHelpDrawer", value: boolean): void;
-}>();
+};
 
 type EdtfExample = {
     primaryValue: string;

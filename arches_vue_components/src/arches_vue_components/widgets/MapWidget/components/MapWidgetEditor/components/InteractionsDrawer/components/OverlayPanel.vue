@@ -8,7 +8,7 @@ import type { Ref } from "vue";
 
 import type { MapLayer } from "@/arches_vue_components/widgets/MapWidget/types.ts";
 
-defineProps<{ map: Map }>();
+defineProps(["map"]) as { map: Map };
 
 const overlays = inject<Ref<MapLayer[]>>("overlays", ref([]));
 </script>

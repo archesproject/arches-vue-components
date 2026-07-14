@@ -3,13 +3,13 @@ import { watch } from "vue";
 
 import type { ConceptAliasedNodeData } from "@/arches_vue_components/datatypes/concept/types.ts";
 
-const { aliasedNodeData } = defineProps<{
+const { aliasedNodeData } = defineProps(["aliasedNodeData"]) as {
     aliasedNodeData?: ConceptAliasedNodeData | null;
-}>();
+};
 
-const emit = defineEmits<{
-    initialized: [updatedValue: ConceptAliasedNodeData];
-}>();
+const emit = defineEmits(["initialized"]) as {
+    (event: "initialized", updatedValue: ConceptAliasedNodeData): void;
+};
 
 watch(
     () => aliasedNodeData,

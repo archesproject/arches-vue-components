@@ -6,17 +6,17 @@ import { buildNodeValueAliasedNodeData } from "@/arches_vue_components/datatypes
 
 import type { NodeValueAliasedNodeData } from "@/arches_vue_components/datatypes/node-value/types.ts";
 
-const { aliasedNodeData } = defineProps<{
+const { aliasedNodeData } = defineProps(["aliasedNodeData"]) as {
     aliasedNodeData: NodeValueAliasedNodeData | null;
-}>();
+};
 
-const emit = defineEmits<{
+const emit = defineEmits(["update:aliasedNodeData", "initialized"]) as {
     (
         event: "update:aliasedNodeData",
         updatedValue: NodeValueAliasedNodeData,
     ): void;
     (event: "initialized", updatedValue: NodeValueAliasedNodeData): void;
-}>();
+};
 
 onMounted(() => {
     emit("initialized", aliasedNodeData ?? buildNodeValueAliasedNodeData(null));

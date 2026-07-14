@@ -18,21 +18,30 @@ import {
 import type { ConceptCardXNodeXWidgetData } from "@/arches_vue_components/types.ts";
 
 const { graphSlug, nodeAlias, aliasedNodeData, cardXNodeXWidgetData } =
-    defineProps<{
+    defineProps([
+        "graphSlug",
+        "nodeAlias",
+        "aliasedNodeData",
+        "cardXNodeXWidgetData",
+    ]) as {
         graphSlug?: string;
         nodeAlias?: string;
         aliasedNodeData?: ConceptAliasedNodeData | null;
         cardXNodeXWidgetData?: ConceptCardXNodeXWidgetData;
-    }>();
+    };
 
-const emit = defineEmits<{
+const emit = defineEmits([
+    "update:isLoading",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
     (event: "update:isLoading", isLoading: boolean): void;
     (
         event: "update:aliasedNodeData",
         updatedValue: ConceptAliasedNodeData,
     ): void;
     (event: "initialized", updatedValue: ConceptAliasedNodeData): void;
-}>();
+};
 
 const flexDirection =
     cardXNodeXWidgetData?.config?.groupDirection === "column"

@@ -3,13 +3,13 @@ import { onMounted } from "vue";
 
 import type { DomainAliasedNodeData } from "@/arches_vue_components/datatypes/domain/types.ts";
 
-const { aliasedNodeData } = defineProps<{
+const { aliasedNodeData } = defineProps(["aliasedNodeData"]) as {
     aliasedNodeData: DomainAliasedNodeData;
-}>();
+};
 
-const emit = defineEmits<{
-    initialized: [updatedValue: DomainAliasedNodeData];
-}>();
+const emit = defineEmits(["initialized"]) as {
+    (event: "initialized", updatedValue: DomainAliasedNodeData): void;
+};
 
 onMounted(() => {
     emit("initialized", aliasedNodeData);

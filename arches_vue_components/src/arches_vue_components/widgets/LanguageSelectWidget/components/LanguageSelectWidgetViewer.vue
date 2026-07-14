@@ -3,13 +3,13 @@ import { watch } from "vue";
 
 import type { LanguageAliasedNodeData } from "@/arches_vue_components/datatypes/language/types.ts";
 
-const { aliasedNodeData } = defineProps<{
+const { aliasedNodeData } = defineProps(["aliasedNodeData"]) as {
     aliasedNodeData?: LanguageAliasedNodeData | null;
-}>();
+};
 
-const emit = defineEmits<{
-    initialized: [updatedValue: LanguageAliasedNodeData];
-}>();
+const emit = defineEmits(["initialized"]) as {
+    (event: "initialized", updatedValue: LanguageAliasedNodeData): void;
+};
 
 watch(
     () => aliasedNodeData,

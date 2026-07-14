@@ -10,13 +10,27 @@ import { buildNodeValueAliasedNodeData } from "@/arches_vue_components/datatypes
 import type { NodeValueAliasedNodeData } from "@/arches_vue_components/datatypes/node-value/types.ts";
 import type { NodeValueSelectWidgetProps } from "@/arches_vue_components/widgets/NodeValueSelectWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<NodeValueSelectWidgetProps>();
+const { aliasedNodeData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as NodeValueSelectWidgetProps;
 
-const emit = defineEmits<{
-    "update:value": [updatedValue: string | null];
-    "update:aliasedNodeData": [updatedValue: NodeValueAliasedNodeData];
-    initialized: [updatedValue: NodeValueAliasedNodeData];
-}>();
+const emit = defineEmits([
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
+    (event: "update:value", updatedValue: string | null): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: NodeValueAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: NodeValueAliasedNodeData): void;
+};
 
 const resolvedAliasedNodeData = computed(
     () => aliasedNodeData ?? buildNodeValueAliasedNodeData(value ?? null),

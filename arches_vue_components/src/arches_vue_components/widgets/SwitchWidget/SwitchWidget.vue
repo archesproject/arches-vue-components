@@ -10,13 +10,27 @@ import { buildBooleanAliasedNodeData } from "@/arches_vue_components/datatypes/b
 import type { BooleanAliasedNodeData } from "@/arches_vue_components/datatypes/boolean/types.ts";
 import type { SwitchWidgetProps } from "@/arches_vue_components/widgets/SwitchWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<SwitchWidgetProps>();
+const { aliasedNodeData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as SwitchWidgetProps;
 
-const emit = defineEmits<{
-    "update:value": [updatedValue: boolean | null];
-    "update:aliasedNodeData": [updatedValue: BooleanAliasedNodeData];
-    initialized: [updatedValue: BooleanAliasedNodeData];
-}>();
+const emit = defineEmits([
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
+    (event: "update:value", updatedValue: boolean | null): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: BooleanAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: BooleanAliasedNodeData): void;
+};
 
 const resolvedAliasedNodeData = computed(
     () => aliasedNodeData ?? buildBooleanAliasedNodeData(value ?? null),

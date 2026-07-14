@@ -28,16 +28,41 @@ const {
     shouldShowFormButtons = true,
     tileData,
     tileId,
-} = defineProps<GenericCardProps>();
+} = defineProps([
+    "mode",
+    "nodegroupAlias",
+    "graphSlug",
+    "resourceInstanceId",
+    "selectedNodeAlias",
+    "shouldShowFormButtons",
+    "tileData",
+    "tileId",
+]) as GenericCardProps;
 
-const emit = defineEmits<{
-    "update:tileData": [tileData: AliasedTileData];
-    "update:widgetDirtyStates": [widgetDirtyStates: Record<string, boolean>];
-    "update:widgetFocusStates": [widgetFocusStates: Record<string, boolean>];
-    save: [tileData: AliasedTileData];
-    reset: [aliasedNodeDataMap: Record<string, AliasedNodeData>];
-    initialized: [aliasedNodeData: Record<string, AliasedNodeData>];
-}>();
+const emit = defineEmits([
+    "update:tileData",
+    "update:widgetDirtyStates",
+    "update:widgetFocusStates",
+    "save",
+    "reset",
+    "initialized",
+]) as {
+    (event: "update:tileData", tileData: AliasedTileData): void;
+    (
+        event: "update:widgetDirtyStates",
+        widgetDirtyStates: Record<string, boolean>,
+    ): void;
+    (
+        event: "update:widgetFocusStates",
+        widgetFocusStates: Record<string, boolean>,
+    ): void;
+    (event: "save", tileData: AliasedTileData): void;
+    (event: "reset", aliasedNodeDataMap: Record<string, AliasedNodeData>): void;
+    (
+        event: "initialized",
+        aliasedNodeData: Record<string, AliasedNodeData>,
+    ): void;
+};
 
 const isLoading = ref(true);
 const configurationError = ref();

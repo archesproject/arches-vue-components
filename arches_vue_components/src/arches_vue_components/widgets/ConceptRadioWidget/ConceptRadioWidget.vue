@@ -12,16 +12,31 @@ import { EDIT, VIEW } from "@/arches_vue_components/widgets/constants.ts";
 import type { ConceptAliasedNodeData } from "@/arches_vue_components/datatypes/concept/types.ts";
 import type { ConceptRadioWidgetProps } from "@/arches_vue_components/widgets/ConceptRadioWidget/types.ts";
 
-const { aliasedNodeData, graphSlug, nodeAlias, value } =
-    defineProps<ConceptRadioWidgetProps>();
+const { aliasedNodeData, graphSlug, nodeAlias, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as ConceptRadioWidgetProps;
 
-const emit = defineEmits<{
-    "update:isDirty": [isDirty: boolean];
-    "update:isLoading": [isLoading: boolean];
-    "update:value": [updatedValue: string | null];
-    "update:aliasedNodeData": [updatedValue: ConceptAliasedNodeData];
-    initialized: [updatedValue: ConceptAliasedNodeData];
-}>();
+const emit: {
+    (event: "update:isDirty", isDirty: boolean): void;
+    (event: "update:isLoading", isLoading: boolean): void;
+    (event: "update:value", updatedValue: string | null): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: ConceptAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: ConceptAliasedNodeData): void;
+} = defineEmits([
+    "update:isDirty",
+    "update:isLoading",
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]);
 
 const { resolved, loading } = useConceptLabelResolver(
     toRef(() => {

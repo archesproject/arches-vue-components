@@ -7,12 +7,17 @@ import type { CardXNodeXWidgetData } from "@/arches_vue_components/types";
 const { $gettext } = useGettext();
 
 const { openFileChooser, cardXNodeXWidgetData, isDisabled, acceptedFileTypes } =
-    defineProps<{
+    defineProps([
+        "openFileChooser",
+        "cardXNodeXWidgetData",
+        "isDisabled",
+        "acceptedFileTypes",
+    ]) as {
         openFileChooser: () => void;
         cardXNodeXWidgetData?: CardXNodeXWidgetData;
         isDisabled: boolean;
         acceptedFileTypes: string[];
-    }>();
+    };
 
 const displayFileTypes = computed(() => {
     if (!acceptedFileTypes.length) {

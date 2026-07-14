@@ -3,13 +3,13 @@ import { onMounted } from "vue";
 
 import type { EDTFAliasedNodeData } from "@/arches_vue_components/datatypes/edtf/types.ts";
 
-const { aliasedNodeData } = defineProps<{
+const { aliasedNodeData } = defineProps(["aliasedNodeData"]) as {
     aliasedNodeData: EDTFAliasedNodeData;
-}>();
+};
 
-const emit = defineEmits<{
-    initialized: [updatedValue: EDTFAliasedNodeData];
-}>();
+const emit = defineEmits(["initialized"]) as {
+    (event: "initialized", updatedValue: EDTFAliasedNodeData): void;
+};
 
 onMounted(() => {
     emit("initialized", aliasedNodeData);

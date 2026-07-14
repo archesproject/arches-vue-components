@@ -10,13 +10,24 @@ import { buildDateAliasedNodeData } from "@/arches_vue_components/datatypes/date
 import type { DateAliasedNodeData } from "@/arches_vue_components/datatypes/date/types.ts";
 import type { DatePickerWidgetProps } from "@/arches_vue_components/widgets/DatePickerWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<DatePickerWidgetProps>();
+const { aliasedNodeData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as DatePickerWidgetProps;
 
-const emit = defineEmits<{
-    "update:value": [updatedValue: string | null];
-    "update:aliasedNodeData": [updatedValue: DateAliasedNodeData];
-    initialized: [updatedValue: DateAliasedNodeData];
-}>();
+const emit = defineEmits([
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
+    (event: "update:value", updatedValue: string | null): void;
+    (event: "update:aliasedNodeData", updatedValue: DateAliasedNodeData): void;
+    (event: "initialized", updatedValue: DateAliasedNodeData): void;
+};
 
 const resolvedAliasedNodeData = computed(
     () => aliasedNodeData ?? buildDateAliasedNodeData(value ?? null),

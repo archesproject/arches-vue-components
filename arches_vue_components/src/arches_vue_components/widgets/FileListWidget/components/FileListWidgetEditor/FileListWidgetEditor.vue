@@ -18,18 +18,21 @@ import type {
     PrimeVueFile,
 } from "@/arches_vue_components/widgets/FileListWidget/types.ts";
 
-const { aliasedNodeData, cardXNodeXWidgetData } = defineProps<{
+const { aliasedNodeData, cardXNodeXWidgetData } = defineProps([
+    "aliasedNodeData",
+    "cardXNodeXWidgetData",
+]) as {
     aliasedNodeData: FileListAliasedNodeData | null;
     cardXNodeXWidgetData?: FileListCardXNodeXWidgetData;
-}>();
+};
 
-const emit = defineEmits<{
+const emit = defineEmits(["update:aliasedNodeData", "initialized"]) as {
     (
         event: "update:aliasedNodeData",
         updatedValue: FileListAliasedNodeData,
     ): void;
     (event: "initialized", updatedValue: FileListAliasedNodeData): void;
-}>();
+};
 
 const fileUploadRef = ref<InstanceType<typeof FileUpload> | null>(null);
 

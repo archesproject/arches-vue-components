@@ -14,17 +14,35 @@ import type {
 } from "@/arches_vue_components/datatypes/resource-instance-list/types.ts";
 import type { ResourceInstanceMultiselectWidgetProps } from "@/arches_vue_components/widgets/ResourceInstanceMultiselectWidget/types.ts";
 
-const { aliasedNodeData, graphSlug, nodeAlias, value } =
-    defineProps<ResourceInstanceMultiselectWidgetProps>();
+const { aliasedNodeData, graphSlug, nodeAlias, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as ResourceInstanceMultiselectWidgetProps;
 
-const emit = defineEmits<{
-    "update:isLoading": [isLoading: boolean];
-    "update:value": [updatedValue: ResourceInstanceReference[] | null];
-    "update:aliasedNodeData": [
+const emit: {
+    (event: "update:isLoading", isLoading: boolean): void;
+    (
+        event: "update:value",
+        updatedValue: ResourceInstanceReference[] | null,
+    ): void;
+    (
+        event: "update:aliasedNodeData",
         updatedValue: ResourceInstanceListAliasedNodeData,
-    ];
-    initialized: [updatedValue: ResourceInstanceListAliasedNodeData];
-}>();
+    ): void;
+    (
+        event: "initialized",
+        updatedValue: ResourceInstanceListAliasedNodeData,
+    ): void;
+} = defineEmits([
+    "update:isLoading",
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]);
 
 const isEditorLoading = ref(false);
 

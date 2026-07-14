@@ -9,13 +9,13 @@ import type {
     FileReference,
 } from "@/arches_vue_components/datatypes/file-list/types";
 
-const { aliasedNodeData } = defineProps<{
+const { aliasedNodeData } = defineProps(["aliasedNodeData"]) as {
     aliasedNodeData: FileListAliasedNodeData;
-}>();
+};
 
-const emit = defineEmits<{
-    initialized: [updatedValue: FileListAliasedNodeData];
-}>();
+const emit = defineEmits(["initialized"]) as {
+    (event: "initialized", updatedValue: FileListAliasedNodeData): void;
+};
 
 onMounted(() => {
     emit("initialized", aliasedNodeData);

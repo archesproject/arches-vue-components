@@ -13,13 +13,27 @@ import type {
 } from "@/arches_vue_components/datatypes/file-list/types.ts";
 import type { FileListWidgetProps } from "@/arches_vue_components/widgets/FileListWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<FileListWidgetProps>();
+const { aliasedNodeData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as FileListWidgetProps;
 
-const emit = defineEmits<{
-    "update:value": [updatedValue: FileReference[] | null];
-    "update:aliasedNodeData": [updatedValue: FileListAliasedNodeData];
-    initialized: [updatedValue: FileListAliasedNodeData];
-}>();
+const emit = defineEmits([
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
+    (event: "update:value", updatedValue: FileReference[] | null): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: FileListAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: FileListAliasedNodeData): void;
+};
 
 const resolvedAliasedNodeData = computed(
     () => aliasedNodeData ?? buildFileListAliasedNodeData(value ?? null),

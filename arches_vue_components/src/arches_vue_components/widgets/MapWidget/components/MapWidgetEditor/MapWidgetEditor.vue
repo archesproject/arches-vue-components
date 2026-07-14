@@ -79,13 +79,23 @@ interface DrawEvent {
     features: Feature[];
 }
 
-const { aliasedNodeData, cardXNodeXWidgetData, renderContext } = defineProps<{
+const { aliasedNodeData, cardXNodeXWidgetData, renderContext } = defineProps([
+    "aliasedNodeData",
+    "cardXNodeXWidgetData",
+    "renderContext",
+]) as {
     aliasedNodeData: GeoJSONFeatureCollectionAliasedNodeData | null;
     cardXNodeXWidgetData?: MapCardXNodeXWidgetData;
     renderContext?: string;
-}>();
+};
 
-const emit = defineEmits<{
+const emit = defineEmits([
+    "update:value",
+    "update:isLoading",
+    "update:overlays",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
     (event: "update:value", value: FeatureCollection): void;
     (event: "update:isLoading", isLoading: boolean): void;
     (event: "update:overlays"): void;
@@ -97,7 +107,7 @@ const emit = defineEmits<{
         event: "initialized",
         updatedValue: GeoJSONFeatureCollectionAliasedNodeData,
     ): void;
-}>();
+};
 
 const { $gettext } = useGettext();
 

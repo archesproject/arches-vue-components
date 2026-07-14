@@ -5,13 +5,13 @@ import arches from "arches";
 
 import type { ResourceInstanceAliasedNodeData } from "@/arches_vue_components/datatypes/resource-instance/types";
 
-const { aliasedNodeData } = defineProps<{
+const { aliasedNodeData } = defineProps(["aliasedNodeData"]) as {
     aliasedNodeData?: ResourceInstanceAliasedNodeData | null;
-}>();
+};
 
-const emit = defineEmits<{
-    initialized: [updatedValue: ResourceInstanceAliasedNodeData];
-}>();
+const emit = defineEmits(["initialized"]) as {
+    (event: "initialized", updatedValue: ResourceInstanceAliasedNodeData): void;
+};
 
 watch(
     () => aliasedNodeData,

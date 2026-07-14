@@ -10,14 +10,26 @@ import { buildEDTFAliasedNodeData } from "@/arches_vue_components/datatypes/edtf
 import type { EDTFAliasedNodeData } from "@/arches_vue_components/datatypes/edtf/types.ts";
 import type { EDTFWidgetProps } from "@/arches_vue_components/widgets/EDTFWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<EDTFWidgetProps>();
+const { aliasedNodeData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as EDTFWidgetProps;
 
-const emit = defineEmits<{
-    "update:isDirty": [isDirty: boolean];
-    "update:value": [updatedValue: string | null];
-    "update:aliasedNodeData": [updatedValue: EDTFAliasedNodeData];
-    initialized: [updatedValue: EDTFAliasedNodeData];
-}>();
+const emit = defineEmits([
+    "update:isDirty",
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
+    (event: "update:isDirty", isDirty: boolean): void;
+    (event: "update:value", updatedValue: string | null): void;
+    (event: "update:aliasedNodeData", updatedValue: EDTFAliasedNodeData): void;
+    (event: "initialized", updatedValue: EDTFAliasedNodeData): void;
+};
 
 const resolvedAliasedNodeData = computed(
     () => aliasedNodeData ?? buildEDTFAliasedNodeData(value ?? null),
