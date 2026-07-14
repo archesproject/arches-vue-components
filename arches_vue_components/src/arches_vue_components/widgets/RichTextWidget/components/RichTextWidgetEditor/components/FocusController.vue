@@ -6,7 +6,9 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref } from "vue";
 
-const { nodeAlias } = defineProps<{ nodeAlias: string }>();
+const { nodeAlias } = defineProps(["nodeAlias"]) as {
+    nodeAlias: string;
+};
 
 const wrapperElementRef = ref<HTMLElement | null>(null);
 

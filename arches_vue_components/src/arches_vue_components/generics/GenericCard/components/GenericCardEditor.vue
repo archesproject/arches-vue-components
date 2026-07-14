@@ -38,15 +38,23 @@ const {
     selectedNodeAlias,
     shouldShowFormButtons = true,
     tileData,
-} = defineProps<{
+} = defineProps([
+    "cardXNodeXWidgetData",
+    "graphSlug",
+    "nodegroupAlias",
+    "resourceInstanceId",
+    "selectedNodeAlias",
+    "shouldShowFormButtons",
+    "tileData",
+]) as {
     cardXNodeXWidgetData: CardXNodeXWidgetData[];
     graphSlug: string;
     nodegroupAlias: string;
-    resourceInstanceId: string | null | undefined;
+    resourceInstanceId?: string | null;
     selectedNodeAlias?: string | null;
-    shouldShowFormButtons: boolean | undefined;
+    shouldShowFormButtons?: boolean;
     tileData?: AliasedTileData;
-}>();
+};
 
 const emit = defineEmits([
     "update:tileData",

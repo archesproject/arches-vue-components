@@ -23,9 +23,9 @@ import {
 } from "@/arches_vue_components/widgets/MapWidget/constants.ts";
 import { getMapboxDraw } from "@/arches_vue_components/widgets/MapWidget/utils.ts";
 
-const { map } = defineProps<{
+const { map } = defineProps(["map"]) as {
     map: MaplibreMap;
-}>();
+};
 
 defineExpose({
     deleteSelectedDrawnFeature,

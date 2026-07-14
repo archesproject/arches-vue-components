@@ -12,15 +12,29 @@ import { EDIT, VIEW } from "@/arches_vue_components/widgets/constants.ts";
 import type { ConceptListAliasedNodeData } from "@/arches_vue_components/datatypes/concept-list/types.ts";
 import type { ConceptMultiselectWidgetProps } from "@/arches_vue_components/widgets/ConceptMultiselectWidget/types.ts";
 
-const { aliasedNodeData, graphSlug, nodeAlias, value } =
-    defineProps<ConceptMultiselectWidgetProps>();
+const { aliasedNodeData, graphSlug, nodeAlias, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as ConceptMultiselectWidgetProps;
 
-const emit = defineEmits<{
-    "update:isLoading": [isLoading: boolean];
-    "update:value": [updatedValue: string[] | null];
-    "update:aliasedNodeData": [updatedValue: ConceptListAliasedNodeData];
-    initialized: [updatedValue: ConceptListAliasedNodeData];
-}>();
+const emit: {
+    (event: "update:isLoading", isLoading: boolean): void;
+    (event: "update:value", updatedValue: string[] | null): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: ConceptListAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: ConceptListAliasedNodeData): void;
+} = defineEmits([
+    "update:isLoading",
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]);
 
 const { resolvedItems, loading } = useConceptLabelsResolver(
     toRef(() => {

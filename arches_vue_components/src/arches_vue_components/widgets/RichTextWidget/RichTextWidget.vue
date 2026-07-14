@@ -15,13 +15,30 @@ import type {
 } from "@/arches_vue_components/datatypes/string/types.ts";
 import type { RichTextWidgetProps } from "@/arches_vue_components/widgets/RichTextWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<RichTextWidgetProps>();
+const { aliasedNodeData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as RichTextWidgetProps;
 
-const emit = defineEmits<{
-    "update:value": [updatedValue: Record<string, LanguageValue> | null];
-    "update:aliasedNodeData": [updatedValue: StringAliasedNodeData];
-    initialized: [updatedValue: StringAliasedNodeData];
-}>();
+const emit = defineEmits([
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
+    (
+        event: "update:value",
+        updatedValue: Record<string, LanguageValue> | null,
+    ): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: StringAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: StringAliasedNodeData): void;
+};
 
 const { current } = useGettext();
 const resolvedAliasedNodeData = computed(

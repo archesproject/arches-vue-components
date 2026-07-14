@@ -11,14 +11,29 @@ import { buildLanguageAliasedNodeData } from "@/arches_vue_components/datatypes/
 import type { LanguageAliasedNodeData } from "@/arches_vue_components/datatypes/language/types.ts";
 import type { LanguageSelectWidgetProps } from "@/arches_vue_components/widgets/LanguageSelectWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<LanguageSelectWidgetProps>();
+const { aliasedNodeData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as LanguageSelectWidgetProps;
 
-const emit = defineEmits<{
-    "update:isLoading": [isLoading: boolean];
-    "update:value": [updatedValue: string | null];
-    "update:aliasedNodeData": [updatedValue: LanguageAliasedNodeData];
-    initialized: [updatedValue: LanguageAliasedNodeData];
-}>();
+const emit = defineEmits([
+    "update:isLoading",
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
+    (event: "update:isLoading", isLoading: boolean): void;
+    (event: "update:value", updatedValue: string | null): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: LanguageAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: LanguageAliasedNodeData): void;
+};
 
 const languageStore = useLanguageStore();
 const isLanguagesLoading = ref(true);

@@ -16,21 +16,30 @@ import type {
 import type { ConceptListAliasedNodeData } from "@/arches_vue_components/datatypes/concept-list/types.ts";
 
 const { graphSlug, nodeAlias, aliasedNodeData, cardXNodeXWidgetData } =
-    defineProps<{
+    defineProps([
+        "graphSlug",
+        "nodeAlias",
+        "aliasedNodeData",
+        "cardXNodeXWidgetData",
+    ]) as {
         graphSlug?: string;
         nodeAlias?: string;
         aliasedNodeData?: ConceptListAliasedNodeData | null;
         cardXNodeXWidgetData?: CardXNodeXWidgetData;
-    }>();
+    };
 
-const emit = defineEmits<{
+const emit = defineEmits([
+    "update:isLoading",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
     (event: "update:isLoading", isLoading: boolean): void;
     (
         event: "update:aliasedNodeData",
         updatedValue: ConceptListAliasedNodeData,
     ): void;
     (event: "initialized", updatedValue: ConceptListAliasedNodeData): void;
-}>();
+};
 
 const options: Ref<CollectionItem[] | null> = ref<CollectionItem[] | null>(
     null,

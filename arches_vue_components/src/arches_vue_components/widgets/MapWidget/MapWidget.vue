@@ -12,17 +12,35 @@ import type { FeatureCollection } from "geojson";
 import type { GeoJSONFeatureCollectionAliasedNodeData } from "@/arches_vue_components/datatypes/geojson-feature-collection/types.ts";
 import type { MapWidgetProps } from "@/arches_vue_components/widgets/MapWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<MapWidgetProps>();
+const { aliasedNodeData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "renderContext",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as MapWidgetProps;
 
-const emit = defineEmits<{
-    "update:isLoading": [isLoading: boolean];
-    "update:value": [updatedValue: FeatureCollection];
-    "update:overlays": [];
-    "update:aliasedNodeData": [
+const emit = defineEmits([
+    "update:isLoading",
+    "update:value",
+    "update:overlays",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
+    (event: "update:isLoading", isLoading: boolean): void;
+    (event: "update:value", updatedValue: FeatureCollection): void;
+    (event: "update:overlays"): void;
+    (
+        event: "update:aliasedNodeData",
         updatedValue: GeoJSONFeatureCollectionAliasedNodeData,
-    ];
-    initialized: [updatedValue: GeoJSONFeatureCollectionAliasedNodeData];
-}>();
+    ): void;
+    (
+        event: "initialized",
+        updatedValue: GeoJSONFeatureCollectionAliasedNodeData,
+    ): void;
+};
 
 const resolvedAliasedNodeData = computed(
     () =>

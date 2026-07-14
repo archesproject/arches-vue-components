@@ -10,14 +10,23 @@ import { EDIT, VIEW } from "@/arches_vue_components/widgets/constants.ts";
 import type { DomainListAliasedNodeData } from "@/arches_vue_components/datatypes/domain/types.ts";
 import type { DomainMultiselectWidgetProps } from "@/arches_vue_components/widgets/DomainMultiselectWidget/types.ts";
 
-const { aliasedNodeData, cardXNodeXWidgetData, value } =
-    defineProps<DomainMultiselectWidgetProps>();
+const { aliasedNodeData, cardXNodeXWidgetData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as DomainMultiselectWidgetProps;
 
-const emit = defineEmits<{
-    "update:value": [updatedValue: string[] | null];
-    "update:aliasedNodeData": [updatedValue: DomainListAliasedNodeData];
-    initialized: [updatedValue: DomainListAliasedNodeData];
-}>();
+const emit: {
+    (event: "update:value", updatedValue: string[] | null): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: DomainListAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: DomainListAliasedNodeData): void;
+} = defineEmits(["update:value", "update:aliasedNodeData", "initialized"]);
 
 const resolvedAliasedNodeData = computed(
     () =>

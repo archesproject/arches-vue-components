@@ -10,14 +10,23 @@ import { EDIT, VIEW } from "@/arches_vue_components/widgets/constants.ts";
 import type { DomainAliasedNodeData } from "@/arches_vue_components/datatypes/domain/types.ts";
 import type { DomainRadioWidgetProps } from "@/arches_vue_components/widgets/DomainRadioWidget/types.ts";
 
-const { aliasedNodeData, cardXNodeXWidgetData, value } =
-    defineProps<DomainRadioWidgetProps>();
+const { aliasedNodeData, cardXNodeXWidgetData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as DomainRadioWidgetProps;
 
-const emit = defineEmits<{
-    "update:value": [updatedValue: string | null];
-    "update:aliasedNodeData": [updatedValue: DomainAliasedNodeData];
-    initialized: [updatedValue: DomainAliasedNodeData];
-}>();
+const emit: {
+    (event: "update:value", updatedValue: string | null): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: DomainAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: DomainAliasedNodeData): void;
+} = defineEmits(["update:value", "update:aliasedNodeData", "initialized"]);
 
 const resolvedAliasedNodeData = computed(
     () =>

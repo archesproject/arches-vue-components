@@ -10,20 +10,23 @@ import type {
     DomainListAliasedNodeData,
 } from "@/arches_vue_components/datatypes/domain/types.ts";
 
-const { aliasedNodeData, cardXNodeXWidgetData } = defineProps<{
+const { aliasedNodeData, cardXNodeXWidgetData } = defineProps([
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+]) as {
     cardXNodeXWidgetData?: DomainCardXNodeXWidgetData;
     aliasedNodeData: DomainListAliasedNodeData | null;
-}>();
+};
 
 const options = cardXNodeXWidgetData?.node.config.options ?? [];
 
-const emit = defineEmits<{
+const emit = defineEmits(["update:aliasedNodeData", "initialized"]) as {
     (
         event: "update:aliasedNodeData",
         updatedValue: DomainListAliasedNodeData,
     ): void;
     (event: "initialized", updatedValue: DomainListAliasedNodeData): void;
-}>();
+};
 
 onMounted(() => {
     emit(

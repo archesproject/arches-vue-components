@@ -9,18 +9,21 @@ import type {
     NumberCardXNodeXWidgetData,
 } from "@/arches_vue_components/datatypes/number/types.ts";
 
-const { cardXNodeXWidgetData, aliasedNodeData } = defineProps<{
+const { cardXNodeXWidgetData, aliasedNodeData } = defineProps([
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+]) as {
     cardXNodeXWidgetData?: NumberCardXNodeXWidgetData;
     aliasedNodeData: NumberAliasedNodeData | null;
-}>();
+};
 
-const emit = defineEmits<{
+const emit = defineEmits(["update:aliasedNodeData", "initialized"]) as {
     (
         event: "update:aliasedNodeData",
         updatedValue: NumberAliasedNodeData,
     ): void;
     (event: "initialized", updatedValue: NumberAliasedNodeData): void;
-}>();
+};
 
 onMounted(() => {
     emit("initialized", aliasedNodeData ?? buildNumberAliasedNodeData(null));

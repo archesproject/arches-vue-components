@@ -19,21 +19,25 @@ import type {
     StringAliasedNodeData,
 } from "@/arches_vue_components/datatypes/string/types.ts";
 
-const { cardXNodeXWidgetData, aliasedNodeData, renderContext } = defineProps<{
+const { cardXNodeXWidgetData, aliasedNodeData, renderContext } = defineProps([
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "renderContext",
+]) as {
     cardXNodeXWidgetData?: StringCardXNodeXWidgetData;
     aliasedNodeData: StringAliasedNodeData | null;
     renderContext?: string;
-}>();
+};
 
 const initialNodeValue = aliasedNodeData?.node_value;
 
-const emit = defineEmits<{
+const emit = defineEmits(["update:aliasedNodeData", "initialized"]) as {
     (
         event: "update:aliasedNodeData",
         updatedValue: StringAliasedNodeData,
     ): void;
     (event: "initialized", updatedValue: StringAliasedNodeData): void;
-}>();
+};
 
 const { $gettext } = useGettext();
 

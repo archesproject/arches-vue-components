@@ -5,14 +5,17 @@ import { useGettext } from "vue3-gettext";
 import type { BooleanCardXNodeXWidgetData } from "@/arches_vue_components/types.ts";
 import type { BooleanAliasedNodeData } from "@/arches_vue_components/datatypes/boolean/types.ts";
 
-const { cardXNodeXWidgetData, aliasedNodeData } = defineProps<{
+const { cardXNodeXWidgetData, aliasedNodeData } = defineProps([
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+]) as {
     cardXNodeXWidgetData?: BooleanCardXNodeXWidgetData;
     aliasedNodeData: BooleanAliasedNodeData;
-}>();
+};
 
-const emit = defineEmits<{
-    initialized: [updatedValue: BooleanAliasedNodeData];
-}>();
+const emit = defineEmits(["initialized"]) as {
+    (event: "initialized", updatedValue: BooleanAliasedNodeData): void;
+};
 
 const { $gettext } = useGettext();
 

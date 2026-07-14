@@ -12,15 +12,29 @@ import { EDIT, VIEW } from "@/arches_vue_components/widgets/constants.ts";
 import type { ConceptAliasedNodeData } from "@/arches_vue_components/datatypes/concept/types.ts";
 import type { ConceptSelectWidgetProps } from "@/arches_vue_components/widgets/ConceptSelectWidget/types.ts";
 
-const { aliasedNodeData, graphSlug, nodeAlias, value } =
-    defineProps<ConceptSelectWidgetProps>();
+const { aliasedNodeData, graphSlug, nodeAlias, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as ConceptSelectWidgetProps;
 
-const emit = defineEmits<{
-    "update:isLoading": [isLoading: boolean];
-    "update:value": [updatedValue: string | null];
-    "update:aliasedNodeData": [updatedValue: ConceptAliasedNodeData];
-    initialized: [updatedValue: ConceptAliasedNodeData];
-}>();
+const emit: {
+    (event: "update:isLoading", isLoading: boolean): void;
+    (event: "update:value", updatedValue: string | null): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: ConceptAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: ConceptAliasedNodeData): void;
+} = defineEmits([
+    "update:isLoading",
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]);
 
 const isEditorLoading = ref(false);
 

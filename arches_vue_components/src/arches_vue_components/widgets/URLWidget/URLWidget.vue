@@ -13,13 +13,24 @@ import type {
 } from "@/arches_vue_components/datatypes/url/types.ts";
 import type { URLWidgetProps } from "@/arches_vue_components/widgets/URLWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<URLWidgetProps>();
+const { aliasedNodeData, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as URLWidgetProps;
 
-const emit = defineEmits<{
-    "update:value": [updatedValue: URLNodeValue | null];
-    "update:aliasedNodeData": [updatedValue: URLAliasedNodeData];
-    initialized: [updatedValue: URLAliasedNodeData];
-}>();
+const emit = defineEmits([
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
+    (event: "update:value", updatedValue: URLNodeValue | null): void;
+    (event: "update:aliasedNodeData", updatedValue: URLAliasedNodeData): void;
+    (event: "initialized", updatedValue: URLAliasedNodeData): void;
+};
 
 const resolvedAliasedNodeData = computed(
     () => aliasedNodeData ?? buildURLAliasedNodeData(value ?? null),

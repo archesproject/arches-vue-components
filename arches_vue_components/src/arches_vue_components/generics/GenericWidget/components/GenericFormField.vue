@@ -20,15 +20,19 @@ type FormFieldType = {
     };
 };
 
-const { isDirty, nodeAlias, initialValue } = defineProps<{
+const { isDirty, nodeAlias, initialValue } = defineProps([
+    "isDirty",
+    "nodeAlias",
+    "initialValue",
+]) as {
     isDirty: boolean;
     nodeAlias: string;
     initialValue: AliasedNodeData | null;
-}>();
+};
 
-const emit = defineEmits<{
+const emit = defineEmits(["update:isDirty"]) as {
     (e: "update:isDirty", dirty: boolean): void;
-}>();
+};
 
 const formFieldRef = useTemplateRef<FormFieldType>("formField");
 

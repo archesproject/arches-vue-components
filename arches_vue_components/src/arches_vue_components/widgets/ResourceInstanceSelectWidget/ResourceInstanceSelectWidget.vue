@@ -22,14 +22,33 @@ const {
     cardXNodeXWidgetData,
     value,
     defaultTerm,
-} = defineProps<ResourceInstanceSelectWidgetProps>();
+} = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+    "defaultTerm",
+]) as ResourceInstanceSelectWidgetProps;
 
-const emit = defineEmits<{
-    "update:isLoading": [isLoading: boolean];
-    "update:value": [updatedValue: ResourceInstanceReference | null];
-    "update:aliasedNodeData": [updatedValue: ResourceInstanceAliasedNodeData];
-    initialized: [updatedValue: ResourceInstanceAliasedNodeData];
-}>();
+const emit: {
+    (event: "update:isLoading", isLoading: boolean): void;
+    (
+        event: "update:value",
+        updatedValue: ResourceInstanceReference | null,
+    ): void;
+    (
+        event: "update:aliasedNodeData",
+        updatedValue: ResourceInstanceAliasedNodeData,
+    ): void;
+    (event: "initialized", updatedValue: ResourceInstanceAliasedNodeData): void;
+} = defineEmits([
+    "update:isLoading",
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]);
 
 const isEditorLoading = ref(false);
 

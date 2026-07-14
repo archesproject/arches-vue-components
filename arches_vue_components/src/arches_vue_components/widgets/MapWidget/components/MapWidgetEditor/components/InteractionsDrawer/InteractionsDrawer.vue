@@ -14,12 +14,12 @@ const {
     items,
     position = "right",
     defaultOpenIndex,
-} = defineProps<{
+} = defineProps(["map", "items", "position", "defaultOpenIndex"]) as {
     map: MaplibreMap;
     items: MapInteractionItem[];
     position?: "left" | "right";
     defaultOpenIndex?: number;
-}>();
+};
 
 const selectedComponent = shallowRef<Component | null>(null);
 const isOverlayVisible = ref(false);

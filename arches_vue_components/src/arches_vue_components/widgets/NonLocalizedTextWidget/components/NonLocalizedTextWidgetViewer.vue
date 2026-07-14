@@ -3,13 +3,13 @@ import { onMounted } from "vue";
 
 import type { NonLocalizedTextAliasedNodeData } from "@/arches_vue_components/datatypes/non-localized-text/types.ts";
 
-const { aliasedNodeData } = defineProps<{
+const { aliasedNodeData } = defineProps(["aliasedNodeData"]) as {
     aliasedNodeData: NonLocalizedTextAliasedNodeData;
-}>();
+};
 
-const emit = defineEmits<{
-    initialized: [updatedValue: NonLocalizedTextAliasedNodeData];
-}>();
+const emit = defineEmits(["initialized"]) as {
+    (event: "initialized", updatedValue: NonLocalizedTextAliasedNodeData): void;
+};
 
 onMounted(() => {
     emit("initialized", aliasedNodeData);

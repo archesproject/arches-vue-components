@@ -18,15 +18,18 @@ import type {
     DateCardXNodeXWidgetData,
 } from "@/arches_vue_components/datatypes/date/types.ts";
 
-const { cardXNodeXWidgetData, aliasedNodeData } = defineProps<{
+const { cardXNodeXWidgetData, aliasedNodeData } = defineProps([
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+]) as {
     cardXNodeXWidgetData?: DateCardXNodeXWidgetData;
     aliasedNodeData: DateAliasedNodeData | null;
-}>();
+};
 
-const emit = defineEmits<{
+const emit = defineEmits(["update:aliasedNodeData", "initialized"]) as {
     (event: "update:aliasedNodeData", updatedValue: DateAliasedNodeData): void;
     (event: "initialized", updatedValue: DateAliasedNodeData): void;
-}>();
+};
 
 const shouldShowTime = ref(false);
 const dateFormat = ref();

@@ -31,16 +31,33 @@ const {
     nodeAlias,
     shouldShowLabel = true,
     value,
-} = defineProps<GenericWidgetProps>();
+} = defineProps([
+    "aliasedNodeData",
+    "cardXNodeXWidgetData",
+    "cardXNodeXWidgetDataOverrides",
+    "graphSlug",
+    "isDirty",
+    "mode",
+    "nodeAlias",
+    "shouldShowLabel",
+    "value",
+]) as GenericWidgetProps;
 
-const emit = defineEmits<{
-    "update:isDirty": [isDirty: boolean];
-    "update:isFocused": [isFocused: boolean];
-    "update:isLoading": [isLoading: boolean];
-    "update:value": [value: unknown];
-    "update:aliasedNodeData": [aliasedNodeData: AliasedNodeData];
-    initialized: [aliasedNodeData: AliasedNodeData];
-}>();
+const emit = defineEmits([
+    "update:isDirty",
+    "update:isFocused",
+    "update:isLoading",
+    "update:value",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
+    (event: "update:isDirty", isDirty: boolean): void;
+    (event: "update:isFocused", isFocused: boolean): void;
+    (event: "update:isLoading", isLoading: boolean): void;
+    (event: "update:value", value: unknown): void;
+    (event: "update:aliasedNodeData", aliasedNodeData: AliasedNodeData): void;
+    (event: "initialized", aliasedNodeData: AliasedNodeData): void;
+};
 
 defineOptions({ inheritAttrs: false });
 

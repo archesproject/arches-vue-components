@@ -9,16 +9,24 @@ import type {
     CardXNodeXWidgetData,
 } from "@/arches_vue_components/types.ts";
 
-const { cardXNodeXWidgetData, graphSlug, tileData } = defineProps<{
+const { cardXNodeXWidgetData, graphSlug, tileData } = defineProps([
+    "cardXNodeXWidgetData",
+    "graphSlug",
+    "nodegroupAlias",
+    "tileData",
+]) as {
     cardXNodeXWidgetData: CardXNodeXWidgetData[];
     graphSlug: string;
     nodegroupAlias: string;
     tileData?: AliasedTileData;
-}>();
+};
 
-const emit = defineEmits<{
-    initialized: [aliasedNodeData: Record<string, AliasedNodeData>];
-}>();
+const emit = defineEmits(["initialized"]) as {
+    (
+        event: "initialized",
+        aliasedNodeData: Record<string, AliasedNodeData>,
+    ): void;
+};
 
 const initializedNodeAliases = new Set<string>();
 const initializedNodeData: Record<string, AliasedNodeData> = {};

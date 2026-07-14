@@ -11,15 +11,18 @@ import { buildEDTFAliasedNodeData } from "@/arches_vue_components/datatypes/edtf
 import type { CardXNodeXWidgetData } from "@/arches_vue_components/types.ts";
 import type { EDTFAliasedNodeData } from "@/arches_vue_components/datatypes/edtf/types.ts";
 
-const { cardXNodeXWidgetData, aliasedNodeData } = defineProps<{
+const { cardXNodeXWidgetData, aliasedNodeData } = defineProps([
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+]) as {
     cardXNodeXWidgetData?: CardXNodeXWidgetData;
     aliasedNodeData: EDTFAliasedNodeData | null;
-}>();
+};
 
-const emit = defineEmits<{
+const emit = defineEmits(["update:aliasedNodeData", "initialized"]) as {
     (event: "update:aliasedNodeData", updatedValue: EDTFAliasedNodeData): void;
     (event: "initialized", updatedValue: EDTFAliasedNodeData): void;
-}>();
+};
 
 const { $gettext } = useGettext();
 

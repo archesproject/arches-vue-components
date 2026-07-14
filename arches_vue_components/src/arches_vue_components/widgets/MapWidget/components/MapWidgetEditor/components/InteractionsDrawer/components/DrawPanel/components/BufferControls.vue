@@ -21,9 +21,9 @@ import {
     YARDS,
 } from "@/arches_vue_components/widgets/MapWidget/constants.ts";
 
-const { map } = defineProps<{
+const { map } = defineProps(["map"]) as {
     map: MaplibreMap;
-}>();
+};
 
 const { $gettext } = useGettext();
 

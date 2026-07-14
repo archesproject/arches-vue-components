@@ -33,22 +33,32 @@ const {
     graphSlug,
     aliasedNodeData,
     defaultTerm,
-} = defineProps<{
+} = defineProps([
+    "cardXNodeXWidgetData",
+    "nodeAlias",
+    "graphSlug",
+    "aliasedNodeData",
+    "defaultTerm",
+]) as {
     cardXNodeXWidgetData?: ResourceInstanceCardXNodeXWidgetData;
     nodeAlias?: string;
     graphSlug?: string;
     aliasedNodeData?: ResourceInstanceAliasedNodeData | null;
     defaultTerm?: string;
-}>();
+};
 
-const emit = defineEmits<{
+const emit = defineEmits([
+    "update:isLoading",
+    "update:aliasedNodeData",
+    "initialized",
+]) as {
     (event: "update:isLoading", isLoading: boolean): void;
     (
         event: "update:aliasedNodeData",
         updatedValue: ResourceInstanceAliasedNodeData,
     ): void;
     (event: "initialized", updatedValue: ResourceInstanceAliasedNodeData): void;
-}>();
+};
 
 const { $gettext } = useGettext();
 
