@@ -1,2 +1,2 @@
-exclude arches_querysets/settings_local.py
+exclude arches_vue_components/settings_local.py
 global-exclude *.pyc
