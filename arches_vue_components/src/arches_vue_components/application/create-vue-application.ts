@@ -12,8 +12,8 @@ import Tooltip from "primevue/tooltip";
 import { createPinia } from "pinia";
 import { createGettext } from "vue3-gettext";
 
-import { DEFAULT_THEME } from "@/arches_vue_components/themes";
-import { generateArchesURL } from "@/arches_vue_components/application/generate-arches-url";
+import { DEFAULT_THEME } from "@/arches_vue_components/themes/default.ts";
+import { generateArchesURL } from "@/arches_vue_components/application/generate-arches-url.ts";
 
 import type { App } from "vue";
 import type {
