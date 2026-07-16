@@ -67,7 +67,7 @@ export function generateArchesURL(
         languageCode = document.documentElement.lang;
     }
 
-    const routeParameters = {
+    const routeParameters: Record<string, string | number | undefined> = {
         ...urlParameters,
         language_code: languageCode.split("-")[0],
     };
