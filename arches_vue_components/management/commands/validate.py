@@ -4,7 +4,7 @@ from django.core.management import CommandError
 
 from arches.app.const import IntegrityCheck as BaseIntegrityCheck
 from arches.management.commands.validate import Command as BaseValidateCommand
-from arches.management.commands.validate import CommandModes
+from arches.management.commands.validate import VALIDATE
 from arches.app.models.models import Widget
 
 from arches_vue_components.utils.widget_synchronizer import WidgetSynchronizer
@@ -40,8 +40,16 @@ class Command(BaseValidateCommand):
         for action in parser._actions:
             if "--fix" in action.option_strings:
                 action.choices = choices
-            elif "--codes" in action.option_strings:
-                action.choices = choices
+
+        parser.add_argument(
+            "--codes",
+            action="extend",
+            nargs="+",
+            type=int,
+            default=[],
+            choices=choices,
+            help="List the error codes to validate, e.g. --codes 1005 2001 ...",
+        )
 
     def handle(self, *args, **options):
         super().handle(*args, **options)
@@ -66,7 +74,7 @@ class Command(BaseValidateCommand):
         # None distinguishes whether verbose output implied.
         limit = self.options["limit"] or 500
 
-        if self.mode == CommandModes.VALIDATE:
+        if self.mode == VALIDATE:
             if self.options["codes"] and check.value not in self.options["codes"]:
                 # User didn't request this specific check.
                 return
