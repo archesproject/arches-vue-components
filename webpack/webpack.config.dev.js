@@ -34,6 +34,7 @@ module.exports = () => {
                 },
                 target: 'web',
                 plugins: [
+                    new Webpack.HotModuleReplacementPlugin(),
                     new Webpack.DefinePlugin({
                         'process.env.NODE_ENV': JSON.stringify('development'),
                     }),
