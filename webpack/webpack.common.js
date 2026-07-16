@@ -325,11 +325,6 @@ module.exports = () => {
                 }),
                 new VueLoaderPlugin(),
             ],
-            resolveLoader: {
-                alias: {
-                    text: 'raw-loader'
-                }
-            },
             resolve: {
                 extensions: ['.ts', '.tsx', '.wasm', '.mjs', '.js', '.json'],
                 modules: [Path.resolve(__dirname, PROJECT_RELATIVE_NODE_MODULES_PATH)],
