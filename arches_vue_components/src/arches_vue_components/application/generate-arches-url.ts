@@ -1,14 +1,66 @@
+type ArchesUrlFunction = (...args: Array<string | number>) => string;
+type ArchesUrlValue = string | ArchesUrlFunction;
+
+function parseArchesUrlsFromDOM(): Record<string, ArchesUrlValue> {
+    const archesUrlElements = document.querySelectorAll(".arches-urls");
+    const parsedArchesUrls: Record<string, ArchesUrlValue> = {};
+
+    for (const archesUrlElement of archesUrlElements) {
+        for (const attribute of archesUrlElement.attributes) {
+            if (attribute.name === "style" || attribute.name === "class") {
+                continue;
+            }
+
+            try {
+                const functionFromString = new Function(
+                    "return" + attribute.value,
+                );
+                let result = functionFromString();
+
+                if (!result) {
+                    result = "";
+                }
+                if (typeof result === "object") {
+                    result = String(result);
+                }
+
+                parsedArchesUrls[attribute.name] = result;
+            } catch {
+                parsedArchesUrls[attribute.name] = attribute.value;
+            }
+        }
+    }
+
+    return parsedArchesUrls;
+}
+
+function getPositionalParameterNames(urlFunction: ArchesUrlFunction): string[] {
+    const functionSource = urlFunction.toString();
+    const parameterListMatch = functionSource.match(/^\(([^)]*)\)\s*=>/);
+
+    if (!parameterListMatch) {
+        return [];
+    }
+
+    return parameterListMatch[1]
+        .split(",")
+        .map((parameterName) => parameterName.trim())
+        .filter((parameterName) => parameterName.length > 0);
+}
+
 export function generateArchesURL(
     urlName: string,
     urlParameters: Record<string, string | number> = {},
     queryParameters?: Record<string, string | number>,
     languageCode?: string,
 ): string {
-    // @ts-expect-error ARCHES_URLS is defined globally
-    const routes = ARCHES_URLS[urlName];
+    const routes = parseArchesUrlsFromDOM();
+    const route = routes[urlName];
 
-    if (!routes || !Array.isArray(routes)) {
-        throw new Error(`Key '${urlName}' not found in JSON object`);
+    if (route === undefined) {
+        throw new Error(
+            `Key '${urlName}' not found in .arches-urls attributes`,
+        );
     }
 
     if (!languageCode) {
@@ -20,24 +72,27 @@ export function generateArchesURL(
         language_code: languageCode.split("-")[0],
     };
 
-    const routeParameterNames = Object.keys(routeParameters);
-    const matchingRoute = routes.find(
-        (route: { url: string; params: string[] }) =>
-            route.params.every((parameter) =>
-                routeParameterNames.includes(parameter),
-            ),
-    );
+    let url: string;
 
-    if (!matchingRoute) {
-        throw new Error(
-            `No matching URL pattern for '${urlName}' with provided parameters ${JSON.stringify(routeParameters)}`,
-        );
+    if (typeof route === "function") {
+        const parameterNames = getPositionalParameterNames(route);
+
+        const positionalArguments = parameterNames.map((parameterName) => {
+            const value = routeParameters[parameterName];
+
+            if (value === undefined) {
+                throw new Error(
+                    `Missing required parameter '${parameterName}' for URL '${urlName}'`,
+                );
+            }
+
+            return value;
+        });
+
+        url = route(...positionalArguments);
+    } else {
+        url = route;
     }
-
-    let url = matchingRoute.url;
-    Object.entries(routeParameters).forEach(([key, value]) => {
-        url = url.replace(new RegExp(`{${key}}`, "g"), String(value));
-    });
 
     if (queryParameters && Object.keys(queryParameters).length > 0) {
         const searchParameters = new URLSearchParams();

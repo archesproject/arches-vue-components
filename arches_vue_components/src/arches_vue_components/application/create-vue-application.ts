@@ -27,7 +27,7 @@ export async function createVueApplication({
     initialProps = {},
 }: CreateVueApplicationOptions): Promise<App<Element>> {
     const response = await fetch(
-        generateArchesURL("arches:get_frontend_i18n_data"),
+        generateArchesURL("api_get_frontend_i18n_data"),
     );
     if (!response.ok) {
         throw new Error(response.statusText);
