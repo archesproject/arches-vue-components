@@ -25,7 +25,7 @@
         "@types/geojson": "^7946.0.16",
         "@primeuix/themes": "1.0.1",
         "@primevue/forms": "4.3.9",
-        "arches": "archesproject/arches#dev/8.2.x",
+        "arches": "archesproject/arches#stable/8.1.2",
         "dayjs": "^1.11.13",
         "dompurify": "^3.2.6",
         "es-toolkit": "^1.44.0",
