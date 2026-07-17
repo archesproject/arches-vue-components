@@ -3,67 +3,42 @@ import { generateArchesURL } from "@/arches_vue_components/application/generate-
 
 const originalLang = document.documentElement.lang;
 
+function mountArchesUrls(attributes: Record<string, string>) {
+    const archesUrlsElement = document.createElement("div");
+    archesUrlsElement.classList.add("arches-urls");
+
+    Object.entries(attributes).forEach(([name, value]) => {
+        archesUrlsElement.setAttribute(name, value);
+    });
+
+    document.body.appendChild(archesUrlsElement);
+
+    return archesUrlsElement;
+}
+
 describe("generateArchesURL", () => {
     beforeEach(() => {
-        // @ts-expect-error ARCHES_URLS is defined globally
-        global.ARCHES_URLS = {
-            example_url: [
-                {
-                    url: "/{language_code}/admin/example/{id}",
-                    params: ["language_code", "id"],
-                },
-            ],
-            another_url: [{ url: "/admin/another/{id}", params: ["id"] }],
-            multi_interpolation_url: [
-                {
-                    url: "/{language_code}/resource/{resource_id}/edit/{field_id}/version/{version_id}",
-                    params: [
-                        "language_code",
-                        "resource_id",
-                        "field_id",
-                        "version_id",
-                    ],
-                },
-            ],
-            candidate_test: [
-                {
-                    url: "/{language_code}/test/{a}",
-                    params: ["language_code", "a", "b"],
-                },
-                {
-                    url: "/{language_code}/test/{a}",
-                    params: ["language_code", "a"],
-                },
-            ],
-            no_exact_match: [
-                { url: "/test/{id}", params: ["id"] },
-                { url: "/test/alt/{id}", params: ["id"] },
-            ],
-            missing_required: [
-                {
-                    url: "/required/{id}/value/{value}",
-                    params: ["id", "value"],
-                },
-            ],
-            duplicate_interpolation: [
-                {
-                    url: "/{language_code}/repeated/{id}/again/{id}",
-                    params: ["language_code", "id"],
-                },
-            ],
-            plain_url: [{ url: "/plain/url", params: [] }],
-            extra_params: [
-                {
-                    url: "/{language_code}/extra/{id}",
-                    params: ["language_code", "id"],
-                },
-            ],
-            invalid_type: "/not/array",
-        };
+        mountArchesUrls({
+            example_url:
+                "(language_code, id) => `/${language_code}/admin/example/${id}`",
+            another_url: "(id) => `/admin/another/${id}`",
+            multi_interpolation_url:
+                "(language_code, resource_id, field_id, version_id) => `/${language_code}/resource/${resource_id}/edit/${field_id}/version/${version_id}`",
+            missing_required: "(id, value) => `/required/${id}/value/${value}`",
+            duplicate_interpolation:
+                "(language_code, id) => `/${language_code}/repeated/${id}/again/${id}`",
+            plain_url: "/plain/url",
+            extra_params:
+                "(language_code, id) => `/${language_code}/extra/${id}`",
+            multi_segment_literal_url: "/a/b",
+        });
     });
 
     afterEach(() => {
         document.documentElement.lang = originalLang;
+        document
+            .querySelectorAll(".arches-urls")
+            .forEach((element) => element.remove());
     });
 
     it("returns a valid URL with specified language code and parameters", () => {
@@ -90,23 +65,14 @@ describe("generateArchesURL", () => {
                 undefined,
                 "fr",
             ),
-        ).toThrowError("Key 'non_existent_url' not found in JSON object");
-    });
-
-    it("throws an error if the global route is not an array", () => {
-        expect(() =>
-            generateArchesURL("invalid_type", { id: "999" }),
-        ).toThrowError("Key 'invalid_type' not found in JSON object");
+        ).toThrowError(
+            "Key 'non_existent_url' not found in .arches-urls attributes",
+        );
     });
 
     it("replaces URL parameters correctly", () => {
         const result = generateArchesURL("another_url", { id: "456" });
         expect(result).toBe("/admin/another/456");
-    });
-
-    it("handles URLs without a language code placeholder", () => {
-        const result = generateArchesURL("another_url", { id: "789" });
-        expect(result).toBe("/admin/another/789");
     });
 
     it("handles multiple interpolations in the URL", () => {
@@ -123,28 +89,12 @@ describe("generateArchesURL", () => {
         expect(result).toBe("/es/resource/42/edit/name/version/7");
     });
 
-    it("selects the exact candidate when available (candidate with all required parameters)", () => {
-        const result = generateArchesURL(
-            "candidate_test",
-            { a: "1", b: "2" },
-            undefined,
-            "en",
-        );
-        expect(result).toBe("/en/test/1");
-    });
-
-    it("selects the first candidate when no exact match is available", () => {
-        const result = generateArchesURL("no_exact_match", {
-            id: "123",
-            extra: "456",
-        });
-        expect(result).toBe("/test/123");
-    });
-
     it("throws an error when required URL parameters are missing", () => {
         expect(() =>
             generateArchesURL("missing_required", { id: "123" }),
-        ).toThrowError(/No matching URL pattern for 'missing_required'/);
+        ).toThrowError(
+            "Missing required parameter 'value' for URL 'missing_required'",
+        );
     });
 
     it("replaces duplicate interpolation keys correctly", () => {
@@ -170,6 +120,11 @@ describe("generateArchesURL", () => {
             "pt",
         );
         expect(result).toBe("/pt/extra/321");
+    });
+
+    it("falls back to the raw string for a multi-segment literal URL that would otherwise be parsed as an invalid expression", () => {
+        const result = generateArchesURL("multi_segment_literal_url", {});
+        expect(result).toBe("/a/b");
     });
 
     it("appends query parameters to the URL", () => {

@@ -31,8 +31,7 @@ class MapDataAPI(View):
         geom_nodes = (
             models.Node.objects.filter(
                 graph__isresource=True,
-                graph__is_active=True,
-                graph__source_identifier__isnull=True,
+                graph__publication__isnull=False,
                 datatype__in=models.DDataType.objects.filter(isgeometric=True),
             )
             .exclude(graph__graphid=settings.SYSTEM_SETTINGS_RESOURCE_MODEL_ID)
