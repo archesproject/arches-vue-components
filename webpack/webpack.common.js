@@ -284,14 +284,14 @@ module.exports = () => {
                     cacheGroups: {
                         vendors: {
                             test: /[\\/]node_modules[\\/]/,
-                            enforce: true,
+                            enforce: true, 
                             priority: -10,
                             reuseExistingChunk: true,
                             filename: 'chunks/vendors.[contenthash].js'
                         },
                         commons: {
                             minChunks: 2,
-                            enforce: true,
+                            enforce: true, 
                             priority: -20,
                             reuseExistingChunk: true,
                             filename: 'chunks/commons.[contenthash].js'
@@ -307,7 +307,7 @@ module.exports = () => {
                 new webpack.DefinePlugin({
                     ARCHES_URLS: webpack.DefinePlugin.runtimeValue(
                         () => fs.readFileSync(
-                            Path.resolve(__dirname, PROJECT_RELATIVE_NODE_MODULES_PATH, '..', 'frontend_configuration', 'urls.json'),
+                            Path.resolve(__dirname, PROJECT_RELATIVE_NODE_MODULES_PATH, '..', 'frontend_configuration', 'urls.json'), 
                             'utf-8'
                         ),
                         true  // should be re-evaluated on rebuild
@@ -394,8 +394,12 @@ module.exports = () => {
                             ...archesApplicationsCSSFilepaths
                         ],
                         use: [
-                            { 'loader': Path.join(PROJECT_RELATIVE_NODE_MODULES_PATH, 'style-loader') },
-                            { 'loader': Path.join(PROJECT_RELATIVE_NODE_MODULES_PATH, 'css-loader') },
+                            {
+                                'loader': Path.join(PROJECT_RELATIVE_NODE_MODULES_PATH, 'style-loader'),
+                            },
+                            {
+                                'loader': Path.join(PROJECT_RELATIVE_NODE_MODULES_PATH, 'css-loader'),
+                            },
                         ],
                     },
                     {
@@ -407,9 +411,15 @@ module.exports = () => {
                             ...archesApplicationsVuePaths,
                         ],
                         use: [
-                            { 'loader': MiniCssExtractPlugin.loader },
-                            { 'loader': Path.join(PROJECT_RELATIVE_NODE_MODULES_PATH, 'css-loader') },
-                            { 'loader': Path.join(PROJECT_RELATIVE_NODE_MODULES_PATH, 'postcss-loader') },
+                            {
+                                'loader': MiniCssExtractPlugin.loader,
+                            },
+                            {
+                                'loader': Path.join(PROJECT_RELATIVE_NODE_MODULES_PATH, 'css-loader'),
+                            },
+                            {
+                                'loader': Path.join(PROJECT_RELATIVE_NODE_MODULES_PATH, 'postcss-loader'),
+                            },
                             {
                                 'loader': Path.join(PROJECT_RELATIVE_NODE_MODULES_PATH, 'sass-loader'),
                                 options: {
@@ -428,13 +438,17 @@ module.exports = () => {
                     {
                         test: /\.(woff2?|eot|ttf|otf)$/i,
                         type: 'asset/resource',
-                        generator: { filename: 'fonts/[name].[contenthash][ext]' },
+                        generator: {
+                            filename: 'fonts/[name].[contenthash][ext]',
+                        },
                     },
                     {
                         test: /\.htm$/i,
                         type: 'asset/resource',
                         generator: {
-                            filename: (pathData) => pathData.module.rawRequest,
+                            filename: (pathData) => {
+                                return pathData.module.rawRequest;
+                            },
                             publicPath: '',  // this ensures that Knockout can render the template on page load
                             emit: false,
                         },
@@ -442,12 +456,17 @@ module.exports = () => {
                     {
                         test: /\.(txt|DS_Store)$/i,
                         type: 'asset/resource',
-                        generator: { emit: false },
+                        generator: {
+                            emit: false,
+                        },
                     },
+
                     {
                         test: /\.(png|jpe?g|gif|svg)$/,
                         type: 'asset/resource',
-                        generator: { filename: 'img/[name].[contenthash][ext]' },
+                        generator: {
+                            filename: 'img/[name].[contenthash][ext]',
+                        },
                     },
                 ],
             },
