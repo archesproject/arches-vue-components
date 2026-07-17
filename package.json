@@ -33,6 +33,9 @@
         "pinia": "^3.0.4",
         "quill": "2.0.3"
     },
+    "devDependencies": {
+        "arches-dev-dependencies": "archesproject/arches-dev-dependencies#dev/8.1.x"
+    },
     "nodeModulesPaths": {},
     "overrides": {
         "@primeuix/themes": "1.0.1",
