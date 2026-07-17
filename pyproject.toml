@@ -4,28 +4,26 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arches-vue-components"
-version = "1.0.0"
+version = "2.0.0"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = "AGPL-3.0-or-later"
 license-files = [ "LICENSE",]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Framework :: Django",
-    "Framework :: Django :: 4.2",
-    "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
-dependencies = [ "arches>=7.6.9", "arches-querysets[drf]<2.0.0,>=1.1.0a0",]
+dependencies = [ "arches>=8.2.0,<9.0.0", "arches-querysets[drf]<2.0.0,>=1.1.0a0",]
 dynamic = []
 
 [[project.authors]]
@@ -37,8 +35,8 @@ Documentation = "https://arches.readthedocs.io"
 Repository = "https://github.com/archesproject/arches-vue-components.git"
 Issues = "https://github.com/archesproject/arches-vue-components/issues"
 
-[project.optional-dependencies]
-dev = [ "black==24.4.2", "coverage", "django-silk==5.1.0", "livereload", "pre-commit==3.8.0", "sst",]
+[dependency-groups]
+dev = [ "black==24.4.2", "coverage", "django-silk==5.4.3", "livereload", "pre-commit==4.5.1", "sst",]
 
 [tool.setuptools]
 packages = [ "arches_vue_components",]
