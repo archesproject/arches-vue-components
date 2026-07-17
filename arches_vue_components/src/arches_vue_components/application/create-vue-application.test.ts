@@ -15,14 +15,22 @@ const mockI18nData = {
     translations: {},
 };
 
+function mountArchesUrls(attributes: Record<string, string>) {
+    const archesUrlsElement = document.createElement("div");
+    archesUrlsElement.classList.add("arches-urls");
+
+    Object.entries(attributes).forEach(([name, value]) => {
+        archesUrlsElement.setAttribute(name, value);
+    });
+
+    document.body.appendChild(archesUrlsElement);
+
+    return archesUrlsElement;
+}
+
 describe("createVueApplication", () => {
     beforeEach(() => {
-        // @ts-expect-error ARCHES_URLS is defined globally
-        global.ARCHES_URLS = {
-            "arches:get_frontend_i18n_data": [
-                { url: "/i18n/data", params: [] },
-            ],
-        };
+        mountArchesUrls({ api_get_frontend_i18n_data: "/i18n/data" });
 
         global.fetch = vi.fn().mockResolvedValue({
             ok: true,
@@ -39,6 +47,9 @@ describe("createVueApplication", () => {
     afterEach(() => {
         vi.restoreAllMocks();
         document.documentElement.classList.remove("arches-dark");
+        document
+            .querySelectorAll(".arches-urls")
+            .forEach((element) => element.remove());
     });
 
     it("returns a Vue App instance", async () => {
