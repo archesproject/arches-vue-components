@@ -146,7 +146,6 @@ INSTALLED_APPS = (
     "oauth2_provider",
     "django_celery_results",
     # "silk",
-    "pgtrigger",
 )
 
 # Placing this last ensures any templates provided by Arches Applications

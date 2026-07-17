@@ -12,7 +12,7 @@ pip install arches-vue-components
 
 1. If you do not already have an Arches project, create one by following the instructions in the Arches [documentation](http://archesproject.org/documentation/).
 
-2. Add `arches_querysets` and `arches_vue_components` to `INSTALLED_APPS` below the name of your project but above `arches`. For Arches >= 8.x, also add `pgtrigger`:
+2. Add `arches_querysets` and `arches_vue_components` to `INSTALLED_APPS` below the name of your project but above `arches`:
 ```python
 INSTALLED_APPS = (
     "my_project_name",
@@ -21,7 +21,6 @@ INSTALLED_APPS = (
     "arches_vue_components",
     "arches",
     ...
-    "pgtrigger",
 )
 ```
 
