@@ -49,7 +49,7 @@ const initialValue = computed<Record<string, boolean> | null>(
             const option = getOption(aliasedNodeData.node_value, options.value);
             return option ? { [option.key]: true } : null;
         }
-        return { [aliasedNodeData.node_value]: true };
+        return null;
     },
 );
 
