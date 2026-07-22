@@ -5,6 +5,7 @@ import TreeSelect from "primevue/treeselect";
 
 import { useConceptTreeStore } from "@/arches_vue_components/stores/useConceptTreeStore.ts";
 import { buildConceptListAliasedNodeData } from "@/arches_vue_components/datatypes/concept-list/utils.ts";
+import { getOption } from "@/arches_vue_components/datatypes/concept/utils.ts";
 
 import type { Ref } from "vue";
 import type { TreeNode } from "primevue/treenode";
@@ -41,15 +42,16 @@ const optionsTotalCount = ref(0);
 const fetchError = ref<string | null>(null);
 
 const initialValue = computed<Record<string, boolean> | null>(() => {
-    return (
-        aliasedNodeData?.node_value?.reduce(
-            (acc: Record<string, boolean>, id: string) => ({
-                ...acc,
-                [id]: true,
-            }),
-            {},
-        ) ?? null
-    );
+    if (!aliasedNodeData?.node_value?.length) return null;
+    if (!options.value) return null;
+    const result: Record<string, boolean> = {};
+    for (const id of aliasedNodeData.node_value) {
+        const option = getOption(id, options.value);
+        if (option) {
+            result[option.key] = true;
+        }
+    }
+    return Object.keys(result).length ? result : null;
 });
 
 watch(isLoading, (newValue) => {

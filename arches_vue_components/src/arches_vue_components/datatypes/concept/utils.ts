@@ -20,9 +20,9 @@ export function getOption(
         }
         return null;
     }
-    return findNode(
-        options as CollectionItem[],
-        (option: CollectionItem) => option.key == value,
+    return (
+        findNode(options, (option) => option.key === value) ??
+        findNode(options, (option) => option.conceptid === value)
     );
 }
 

@@ -4,7 +4,7 @@ import { computed, ref, watch, watchEffect } from "vue";
 import TreeSelect from "primevue/treeselect";
 
 import { useConceptTreeStore } from "@/arches_vue_components/stores/useConceptTreeStore.ts";
-import { buildConceptAliasedNodeData } from "@/arches_vue_components/datatypes/concept/utils.ts";
+import { buildConceptAliasedNodeData, getOption } from "@/arches_vue_components/datatypes/concept/utils.ts";
 
 import type { Ref } from "vue";
 import type { TreeNode } from "primevue/treenode";
@@ -44,6 +44,10 @@ const initialValue = computed<Record<string, boolean> | null>(
     (): Record<string, boolean> | null => {
         if (!aliasedNodeData?.node_value) {
             return null;
+        }
+        if (options.value) {
+            const option = getOption(aliasedNodeData.node_value, options.value);
+            return option ? { [option.key]: true } : null;
         }
         return { [aliasedNodeData.node_value]: true };
     },

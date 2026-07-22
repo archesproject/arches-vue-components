@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, watchEffect } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 
 import RadioButton from "primevue/radiobutton";
 import RadioButtonGroup from "primevue/radiobuttongroup";
@@ -14,6 +14,7 @@ import type {
 import {
     buildConceptAliasedNodeData,
     flattenCollectionItems,
+    getOption,
 } from "@/arches_vue_components/datatypes/concept/utils.ts";
 import type { ConceptCardXNodeXWidgetData } from "@/arches_vue_components/types.ts";
 
@@ -44,6 +45,14 @@ const isLoading = ref(false);
 const optionsLoaded = ref(false);
 const optionsTotalCount = ref(0);
 const fetchError = ref<string | null>(null);
+
+const resolvedModelValue = computed<string | null>(() => {
+    if (!aliasedNodeData?.node_value) return null;
+    if (options.value.length) {
+        return getOption(aliasedNodeData.node_value, options.value)?.key ?? null;
+    }
+    return aliasedNodeData.node_value;
+});
 
 watch(isLoading, (newValue) => {
     emit("update:isLoading", newValue);
@@ -95,7 +104,7 @@ function onUpdateModelValue(updatedValue: string | null) {
 <template>
     <RadioButtonGroup
         :id="cardXNodeXWidgetData?.node.alias"
-        :model-value="aliasedNodeData?.node_value ?? null"
+        :model-value="resolvedModelValue"
         :class="['button-group', flexDirection]"
         tabindex="-1"
         @update:model-value="onUpdateModelValue"
