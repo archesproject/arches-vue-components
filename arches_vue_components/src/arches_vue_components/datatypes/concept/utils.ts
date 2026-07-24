@@ -35,13 +35,15 @@ export function buildConceptAliasedNodeData(
     const option = getOption(nodeValue, options);
     let detail: ConceptValueItem[] = [];
     if (option) {
-        detail = [{ 
-            concept_id: option.conceptid, 
-            language_id: "", 
-            value: option.label, 
-            valueid: option.key, 
-            valuetype_id: "" 
-        }];
+        detail = [
+            {
+                concept_id: option.conceptid,
+                language_id: "",
+                value: option.label,
+                valueid: option.key,
+                valuetype_id: "",
+            },
+        ];
     }
     return {
         node_value: nodeValue,

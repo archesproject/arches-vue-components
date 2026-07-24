@@ -53,13 +53,14 @@ const initialValue = computed<string | null>(() => {
         const option = getOption(aliasedNodeData.node_value, options.value);
         if (option) {
             return option.key;
-        }else{
-            // the option was not found using the key(valueid), 
-            // try to find it in the details array using valueid 
+        } else {
+            // the option was not found using the key(valueid),
+            // try to find it in the details array using valueid
             // and then mathching on the concept_id of the detail
             if (aliasedNodeData?.details?.length) {
                 const detail = aliasedNodeData.details.find(
-                    (d: ConceptValueItem) => d.valueid === aliasedNodeData.node_value,
+                    (d: ConceptValueItem) =>
+                        d.valueid === aliasedNodeData.node_value,
                 );
                 if (detail) {
                     const option = getOption(detail.concept_id, options.value);

@@ -50,9 +50,9 @@ const initialValue = computed<Record<string, boolean> | null>(() => {
         const option = getOption(id, options.value);
         if (option) {
             result[option.key] = true;
-        }else{
-            // the option was not found using the key(valueid), 
-            // try to find it in the details array using valueid 
+        } else {
+            // the option was not found using the key(valueid),
+            // try to find it in the details array using valueid
             // and then mathching on the concept_id of the detail
             if (aliasedNodeData?.details?.length) {
                 const detail = aliasedNodeData.details.find(

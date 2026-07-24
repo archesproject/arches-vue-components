@@ -1,6 +1,9 @@
 import { getOption } from "@/arches_vue_components/datatypes/concept/utils.ts";
 
-import type { CollectionItem, ConceptValueItem } from "@/arches_vue_components/datatypes/concept/types.ts";
+import type {
+    CollectionItem,
+    ConceptValueItem,
+} from "@/arches_vue_components/datatypes/concept/types.ts";
 import type { ConceptListAliasedNodeData } from "@/arches_vue_components/datatypes/concept-list/types.ts";
 
 export function buildConceptListAliasedNodeData(
@@ -18,7 +21,7 @@ export function buildConceptListAliasedNodeData(
             language_id: "",
             value: option.label,
             valueid: option.key,
-            valuetype_id: ""
+            valuetype_id: "",
         }));
     return {
         node_value: nodeValues,

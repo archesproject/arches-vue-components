@@ -4,7 +4,10 @@ import { computed, ref, watch, watchEffect } from "vue";
 import TreeSelect from "primevue/treeselect";
 
 import { useConceptTreeStore } from "@/arches_vue_components/stores/useConceptTreeStore.ts";
-import { buildConceptAliasedNodeData, getOption } from "@/arches_vue_components/datatypes/concept/utils.ts";
+import {
+    buildConceptAliasedNodeData,
+    getOption,
+} from "@/arches_vue_components/datatypes/concept/utils.ts";
 
 import type { Ref } from "vue";
 import type { TreeNode } from "primevue/treenode";
@@ -50,16 +53,20 @@ const initialValue = computed<Record<string, boolean> | null>(
             const option = getOption(aliasedNodeData.node_value, options.value);
             if (option) {
                 return { [option.key]: true };
-            }else{
-                // the option was not found using the key(valueid), 
-                // try to find it in the details array using valueid 
+            } else {
+                // the option was not found using the key(valueid),
+                // try to find it in the details array using valueid
                 // and then mathching on the concept_id of the detail
                 if (aliasedNodeData?.details?.length) {
                     const detail = aliasedNodeData.details.find(
-                        (d: ConceptValueItem) => d.valueid === aliasedNodeData.node_value,
+                        (d: ConceptValueItem) =>
+                            d.valueid === aliasedNodeData.node_value,
                     );
                     if (detail) {
-                        const option = getOption(detail.concept_id, options.value);
+                        const option = getOption(
+                            detail.concept_id,
+                            options.value,
+                        );
                         if (option) {
                             return { [option.key]: true };
                         }
