@@ -12,6 +12,7 @@ import type {
     CollectionItem,
     ConceptAliasedNodeData,
     ConceptFetchResult,
+    ConceptValueItem,
 } from "@/arches_vue_components/datatypes/concept/types.ts";
 import type { CardXNodeXWidgetData } from "@/arches_vue_components/types.ts";
 
@@ -47,7 +48,24 @@ const initialValue = computed<Record<string, boolean> | null>(
         }
         if (options.value) {
             const option = getOption(aliasedNodeData.node_value, options.value);
-            return option ? { [option.key]: true } : null;
+            if (option) {
+                return { [option.key]: true };
+            }else{
+                // the option was not found using the key(valueid), 
+                // try to find it in the details array using valueid 
+                // and then mathching on the concept_id of the detail
+                if (aliasedNodeData?.details?.length) {
+                    const detail = aliasedNodeData.details.find(
+                        (d: ConceptValueItem) => d.valueid === aliasedNodeData.node_value,
+                    );
+                    if (detail) {
+                        const option = getOption(detail.concept_id, options.value);
+                        if (option) {
+                            return { [option.key]: true };
+                        }
+                    }
+                }
+            }
         }
         return null;
     },

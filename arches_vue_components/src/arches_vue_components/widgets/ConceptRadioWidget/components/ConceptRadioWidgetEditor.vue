@@ -8,6 +8,7 @@ import { useConceptTreeStore } from "@/arches_vue_components/stores/useConceptTr
 import type {
     ConceptFetchResult,
     CollectionItem,
+    ConceptValueItem,
     ConceptAliasedNodeData,
 } from "@/arches_vue_components/datatypes/concept/types.ts";
 
@@ -46,10 +47,29 @@ const optionsLoaded = ref(false);
 const optionsTotalCount = ref(0);
 const fetchError = ref<string | null>(null);
 
-const resolvedModelValue = computed<string | null>(() => {
+const initialValue = computed<string | null>(() => {
     if (!aliasedNodeData?.node_value) return null;
     if (options.value.length) {
-        return getOption(aliasedNodeData.node_value, options.value)?.key ?? null;
+        const option = getOption(aliasedNodeData.node_value, options.value);
+        if (option) {
+            return option.key;
+        }else{
+            // the option was not found using the key(valueid), 
+            // try to find it in the details array using valueid 
+            // and then mathching on the concept_id of the detail
+            if (aliasedNodeData?.details?.length) {
+                const detail = aliasedNodeData.details.find(
+                    (d: ConceptValueItem) => d.valueid === aliasedNodeData.node_value,
+                );
+                if (detail) {
+                    const option = getOption(detail.concept_id, options.value);
+                    if (option) {
+                        return option.key;
+                    }
+                }
+            }
+        }
+        return null;
     }
     return aliasedNodeData.node_value;
 });
@@ -104,7 +124,7 @@ function onUpdateModelValue(updatedValue: string | null) {
 <template>
     <RadioButtonGroup
         :id="cardXNodeXWidgetData?.node.alias"
-        :model-value="resolvedModelValue"
+        :model-value="initialValue"
         :class="['button-group', flexDirection]"
         tabindex="-1"
         @update:model-value="onUpdateModelValue"

@@ -12,6 +12,7 @@ import type { TreeNode } from "primevue/treenode";
 import type { CardXNodeXWidgetData } from "@/arches_vue_components/types.ts";
 import type {
     CollectionItem,
+    ConceptValueItem,
     ConceptFetchResult,
 } from "@/arches_vue_components/datatypes/concept/types.ts";
 import type { ConceptListAliasedNodeData } from "@/arches_vue_components/datatypes/concept-list/types.ts";
@@ -49,6 +50,21 @@ const initialValue = computed<Record<string, boolean> | null>(() => {
         const option = getOption(id, options.value);
         if (option) {
             result[option.key] = true;
+        }else{
+            // the option was not found using the key(valueid), 
+            // try to find it in the details array using valueid 
+            // and then mathching on the concept_id of the detail
+            if (aliasedNodeData?.details?.length) {
+                const detail = aliasedNodeData.details.find(
+                    (d: ConceptValueItem) => d.valueid === id,
+                );
+                if (detail) {
+                    const option = getOption(detail.concept_id, options.value);
+                    if (option) {
+                        result[option.key] = true;
+                    }
+                }
+            }
         }
     }
     return Object.keys(result).length ? result : null;
