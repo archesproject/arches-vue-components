@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, watchEffect } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 
 import Checkbox from "primevue/checkbox";
 import CheckboxGroup from "primevue/checkboxgroup";
@@ -7,10 +7,12 @@ import CheckboxGroup from "primevue/checkboxgroup";
 import { useConceptTreeStore } from "@/arches_vue_components/stores/useConceptTreeStore.ts";
 import { buildConceptListAliasedNodeData } from "@/arches_vue_components/datatypes/concept-list/utils.ts";
 import { flattenCollectionItems } from "@/arches_vue_components/datatypes/concept/utils.ts";
+import { getOption } from "@/arches_vue_components/datatypes/concept/utils.ts";
 
 import type { ConceptCardXNodeXWidgetData } from "@/arches_vue_components/types.ts";
 import type {
     CollectionItem,
+    ConceptValueItem,
     ConceptFetchResult,
 } from "@/arches_vue_components/datatypes/concept/types.ts";
 import type { ConceptListAliasedNodeData } from "@/arches_vue_components/datatypes/concept-list/types.ts";
@@ -42,6 +44,34 @@ const isLoading = ref(false);
 const optionsLoaded = ref(false);
 const optionsTotalCount = ref(0);
 const fetchError = ref<string | null>(null);
+
+const initialValue = computed<string[] | null>(() => {
+    if (!aliasedNodeData?.node_value?.length) return null;
+    if (!options.value) return null;
+    const result = [];
+    for (const id of aliasedNodeData.node_value) {
+        const option = getOption(id, options.value);
+        if (option) {
+            result.push(option.key);
+        } else {
+            // the option was not found using the key(valueid),
+            // try to find it in the details array using valueid
+            // and then mathching on the concept_id of the detail
+            if (aliasedNodeData?.details?.length) {
+                const detail = aliasedNodeData.details.find(
+                    (detailItem: ConceptValueItem) => detailItem.valueid === id,
+                );
+                if (detail) {
+                    const option = getOption(detail.concept_id, options.value);
+                    if (option) {
+                        result.push(option.key);
+                    }
+                }
+            }
+        }
+    }
+    return result.length ? result : null;
+});
 
 watch(isLoading, (newValue) => {
     emit("update:isLoading", newValue);
@@ -93,7 +123,7 @@ function onUpdateModelValue(updatedValue: string[] | null) {
 <template>
     <CheckboxGroup
         :id="cardXNodeXWidgetData?.node.alias"
-        :model-value="aliasedNodeData?.node_value ?? []"
+        :model-value="initialValue"
         :class="['button-group', flexDirection]"
         tabindex="-1"
         @update:model-value="onUpdateModelValue($event)"
