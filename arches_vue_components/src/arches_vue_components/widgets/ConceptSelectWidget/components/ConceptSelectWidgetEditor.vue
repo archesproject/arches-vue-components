@@ -59,8 +59,8 @@ const initialValue = computed<Record<string, boolean> | null>(
                 // and then mathching on the concept_id of the detail
                 if (aliasedNodeData?.details?.length) {
                     const detail = aliasedNodeData.details.find(
-                        (d: ConceptValueItem) =>
-                            d.valueid === aliasedNodeData.node_value,
+                        (detailItem: ConceptValueItem) =>
+                            detailItem.valueid === aliasedNodeData.node_value,
                     );
                     if (detail) {
                         const option = getOption(
