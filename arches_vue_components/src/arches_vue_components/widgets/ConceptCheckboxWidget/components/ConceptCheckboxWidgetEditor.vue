@@ -17,22 +17,28 @@ import type {
 } from "@/arches_vue_components/datatypes/concept/types.ts";
 import type { ConceptListAliasedNodeData } from "@/arches_vue_components/datatypes/concept-list/types.ts";
 
-const { graphSlug, nodeAlias, aliasedNodeData, cardXNodeXWidgetData } =
-    defineProps<{
-        graphSlug?: string;
-        nodeAlias?: string;
-        aliasedNodeData?: ConceptListAliasedNodeData | null;
-        cardXNodeXWidgetData?: ConceptCardXNodeXWidgetData;
-    }>();
+const { graphSlug, nodeAlias, aliasedNodeData, cardXNodeXWidgetData } =  
+    defineProps([  
+        "graphSlug",  
+        "nodeAlias",  
+        "aliasedNodeData",  
+        "cardXNodeXWidgetData",  
+    ]) as {  
+        graphSlug?: string;  
+        nodeAlias?: string;  
+        aliasedNodeData?: ConceptListAliasedNodeData | null;  
+        cardXNodeXWidgetData?: ConceptCardXNodeXWidgetData;  
+    };  
 
-const emit = defineEmits<{
-    (event: "update:isLoading", isLoading: boolean): void;
-    (
-        event: "update:aliasedNodeData",
-        updatedValue: ConceptListAliasedNodeData,
-    ): void;
-    (event: "initialized", updatedValue: ConceptListAliasedNodeData): void;
-}>();
+const emit = defineEmits([  
+    "update:isLoading",  
+    "update:aliasedNodeData",  
+    "initialized",  
+]) as {  
+    (event: "update:isLoading", isLoading: boolean): void;  
+    (event: "update:aliasedNodeData", updatedValue: ConceptListAliasedNodeData): void;  
+    (event: "initialized", updatedValue: ConceptListAliasedNodeData): void;  
+};
 
 const flexDirection =
     cardXNodeXWidgetData?.config?.groupDirection === "column"
