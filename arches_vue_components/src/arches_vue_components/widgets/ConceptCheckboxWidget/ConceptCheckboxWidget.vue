@@ -12,8 +12,14 @@ import { EDIT, VIEW } from "@/arches_vue_components/widgets/constants.ts";
 import type { ConceptListAliasedNodeData } from "@/arches_vue_components/datatypes/concept-list/types.ts";
 import type { ConceptCheckboxWidgetProps } from "@/arches_vue_components/widgets/ConceptCheckboxWidget/types.ts";
 
-const { aliasedNodeData, graphSlug, nodeAlias, value } =
-    defineProps<ConceptCheckboxWidgetProps>();
+const { aliasedNodeData, graphSlug, nodeAlias, value } = defineProps([
+    "mode",
+    "nodeAlias",
+    "graphSlug",
+    "cardXNodeXWidgetData",
+    "aliasedNodeData",
+    "value",
+]) as ConceptCheckboxWidgetProps;
 
 const emit = defineEmits<{
     "update:isLoading": [isLoading: boolean];
