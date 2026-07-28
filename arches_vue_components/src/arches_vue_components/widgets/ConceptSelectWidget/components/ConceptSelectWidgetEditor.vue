@@ -127,7 +127,7 @@ async function getOptions() {
 }
 
 function onUpdateModelValue(selectedOption: Record<string, boolean> | null) {
-    const id = selectedOption ? Object.keys(selectedOption)[0] ?? null : null;
+    const id = selectedOption ? (Object.keys(selectedOption)[0] ?? null) : null;
     emit(
         "update:aliasedNodeData",
         buildConceptAliasedNodeData(id, options.value ?? []),
