@@ -180,6 +180,7 @@ Every widget's `aliasedNodeData`/`cardXNodeXWidgetData` prop is typed to one spe
 | `ConceptSelectWidget` | `ConceptAliasedNodeData` | `CardXNodeXWidgetData` |
 | `ConceptRadioWidget` | `ConceptAliasedNodeData` | `ConceptCardXNodeXWidgetData` |
 | `ConceptMultiselectWidget` | `ConceptListAliasedNodeData` | `CardXNodeXWidgetData` |
+| `ConceptCheckboxWidget` | `ConceptListAliasedNodeData` | `ConceptCardXNodeXWidgetData` |
 | `DomainSelectWidget`, `DomainRadioWidget` | `DomainAliasedNodeData` | `DomainCardXNodeXWidgetData` |
 | `DomainCheckboxWidget`, `DomainMultiselectWidget` | `DomainListAliasedNodeData` | `DomainCardXNodeXWidgetData` |
 | `LanguageSelectWidget` | `LanguageAliasedNodeData` | `CardXNodeXWidgetData` |
