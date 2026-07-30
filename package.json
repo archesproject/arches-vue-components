@@ -29,13 +29,13 @@
         "dayjs": "^1.11.13",
         "dompurify": "^3.2.6",
         "es-toolkit": "^1.44.0",
-        "globals": "17.8.0",
         "maplibre-gl": "^4.7.1",
         "pinia": "^3.0.4",
         "quill": "2.0.3"
     },
     "devDependencies": {
-        "arches-dev-dependencies": "archesproject/arches-dev-dependencies#dev/8.1.x"
+        "arches-dev-dependencies": "archesproject/arches-dev-dependencies#dev/8.1.x",
+        "globals": "17.8.0"
     },
     "nodeModulesPaths": {},
     "overrides": {
