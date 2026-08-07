@@ -22,10 +22,10 @@
     "dependencies": {
         "@mapbox/geojson-extent": "^1.0.1",
         "@mapbox/mapbox-gl-draw": "^1.4.3",
-        "@types/geojson": "^7946.0.16",
         "@primeuix/themes": "1.0.1",
         "@primevue/forms": "4.3.9",
-        "arches": "archesproject/arches#dev/8.2.x",
+        "@types/geojson": "^7946.0.16",
+        "arches": "archesproject/arches#dev/8.1.x",
         "dayjs": "^1.11.13",
         "dompurify": "^3.2.6",
         "es-toolkit": "^1.44.0",
@@ -34,7 +34,8 @@
         "quill": "2.0.3"
     },
     "devDependencies": {
-        "arches-dev-dependencies": "archesproject/arches-dev-dependencies#dev/8.1.x"
+        "arches-dev-dependencies": "archesproject/arches-dev-dependencies#dev/8.1.x",
+        "globals": "17.8.0"
     },
     "nodeModulesPaths": {},
     "overrides": {

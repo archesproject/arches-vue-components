@@ -6,12 +6,13 @@ build-backend = "setuptools.build_meta"
 name = "arches-vue-components"
 version = "2.1.0"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 license = "AGPL-3.0-or-later"
 license-files = [ "LICENSE",]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Framework :: Django",
+    "Framework :: Django :: 5.2",
     "Framework :: Django :: 6.0",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
@@ -19,6 +20,7 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
