@@ -27,7 +27,7 @@ INSTALLED_APPS = (
 3. Add `arches_vue_components` as a dependency in `package.json`:
 ```json
 "dependencies": {
-    "arches_vue_components": "archesproject/arches-vue-components#main"
+    "arches_vue_components": "archesproject/arches-vue-components#stable/2.0.3"
 }
 ```
 
