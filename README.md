@@ -1,6 +1,6 @@
 # Arches Vue Components
 
-A Vue 3 / PrimeVue component library for building custom applications with Arches versions 8.0.0+
+A Vue 3 / PrimeVue component library for building custom applications with Arches versions 8.2.0+
 
 ## Installation
 
