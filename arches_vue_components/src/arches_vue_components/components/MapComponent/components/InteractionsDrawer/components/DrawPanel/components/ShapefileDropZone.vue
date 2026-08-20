@@ -16,11 +16,11 @@ import type { MapContext } from "@/arches_vue_components/components/MapComponent
 
 const ACCEPTED_EXTENSIONS = ["zip", "shp"];
 
-const { context: contextProp = undefined } = defineProps<{
+const { context = undefined } = defineProps<{
     context?: MapContext;
 }>();
 
-const { addFeatures } = useResolvedMapContext(contextProp, "ShapefileDropZone");
+const { addFeatures } = useResolvedMapContext(context, "ShapefileDropZone");
 
 const { $gettext } = useGettext();
 

@@ -21,12 +21,12 @@ import type {
     MapContext,
 } from "@/arches_vue_components/components/MapComponent/types.ts";
 
-const { context: contextProp = undefined } = defineProps<{
+const { context = undefined } = defineProps<{
     context?: MapContext;
 }>();
 
 const { map, allowedGeometryTypes, selectedDrawnFeature, setDrawMode } =
-    useResolvedMapContext(contextProp, "DrawControls");
+    useResolvedMapContext(context, "DrawControls");
 
 const { $gettext } = useGettext();
 

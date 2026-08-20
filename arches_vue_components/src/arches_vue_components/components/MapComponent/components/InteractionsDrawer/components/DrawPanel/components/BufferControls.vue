@@ -18,12 +18,12 @@ import { useResolvedMapContext } from "@/arches_vue_components/components/MapCom
 
 import type { MapContext } from "@/arches_vue_components/components/MapComponent/types.ts";
 
-const { context: contextProp = undefined } = defineProps<{
+const { context = undefined } = defineProps<{
     context?: MapContext;
 }>();
 
 const { selectedDrawnFeature, setBufferForSelectedFeature } =
-    useResolvedMapContext(contextProp, "BufferControls");
+    useResolvedMapContext(context, "BufferControls");
 
 const { $gettext } = useGettext();
 

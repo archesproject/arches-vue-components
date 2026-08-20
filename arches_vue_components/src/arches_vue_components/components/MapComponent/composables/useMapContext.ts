@@ -95,10 +95,6 @@ export function useResolvedMapContext(
     return context;
 }
 
-// No explicit return type: annotating it (inline or via a named interface)
-// makes vue-tsc report "Type instantiation is excessively deep and possibly
-// infinite", coming from mapbox-gl-draw's overloaded method types. Left for
-// inference as the one documented exception to always annotating returns.
 export function useMapContext(
     props: {
         value: FeatureCollection | null;

@@ -10,11 +10,11 @@ import type {
     MapContext,
 } from "@/arches_vue_components/components/MapComponent/types.ts";
 
-const { context: contextProp = undefined } = defineProps<{
+const { context = undefined } = defineProps<{
     context?: MapContext;
 }>();
 
-const { basemaps } = useResolvedMapContext(contextProp, "BasemapPanel");
+const { basemaps } = useResolvedMapContext(context, "BasemapPanel");
 const selectedBasemap = ref<Basemap | null>(null);
 
 watch(selectedBasemap, (newBasemap) => {

@@ -12,21 +12,21 @@ import { useResolvedMapContext } from "@/arches_vue_components/components/MapCom
 
 import type { MapContext } from "@/arches_vue_components/components/MapComponent/types.ts";
 
-const { context: contextProp = undefined } = defineProps<{
+const { context = undefined } = defineProps<{
     context?: MapContext;
 }>();
 
-const context = useResolvedMapContext(contextProp, "DrawPanel");
-const { deleteSelectedDrawnFeature, deleteAllDrawnFeatures } = context;
+const resolvedContext = useResolvedMapContext(context, "DrawPanel");
+const { deleteSelectedDrawnFeature, deleteAllDrawnFeatures } = resolvedContext;
 
 const { $gettext } = useGettext();
 </script>
 
 <template>
-    <ShapefileDropZone :context="context" />
-    <DrawControls :context="context" />
-    <BufferControls :context="context" />
-    <DrawnFeaturesList :context="context" />
+    <ShapefileDropZone :context="resolvedContext" />
+    <DrawControls :context="resolvedContext" />
+    <BufferControls :context="resolvedContext" />
+    <DrawnFeaturesList :context="resolvedContext" />
     <div class="clear-btns">
         <Button
             size="large"
