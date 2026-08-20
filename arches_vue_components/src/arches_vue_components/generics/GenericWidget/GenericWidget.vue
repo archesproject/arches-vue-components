@@ -4,6 +4,7 @@ import {
     defineAsyncComponent,
     ref,
     shallowRef,
+    useTemplateRef,
     watch,
     watchEffect,
 } from "vue";
@@ -43,6 +44,10 @@ const emit = defineEmits<{
 }>();
 
 defineOptions({ inheritAttrs: false });
+
+const widgetInstanceRef = useTemplateRef("widgetInstance");
+
+defineExpose({ widget: widgetInstanceRef });
 
 const isLoading = ref(false);
 const isChildLoading = ref(false);
@@ -184,6 +189,7 @@ function onWidgetInitialized(aliasedNodeData: AliasedNodeData) {
                 >
                     <component
                         :is="widgetComponent"
+                        ref="widgetInstance"
                         v-bind="$attrs"
                         :key="resolvedCardXNodeXWidgetData!.id"
                         :aliased-node-data="aliasedNodeData"
@@ -210,6 +216,7 @@ function onWidgetInitialized(aliasedNodeData: AliasedNodeData) {
             <component
                 :is="widgetComponent"
                 v-else-if="mode === VIEW"
+                ref="widgetInstance"
                 v-bind="$attrs"
                 :key="resolvedCardXNodeXWidgetData!.id"
                 :aliased-node-data="aliasedNodeData"

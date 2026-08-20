@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from "vue";
 
-import MapWidgetEditor from "@/arches_vue_components/widgets/MapWidget/components/MapWidgetEditor/MapWidgetEditor.vue";
+import MapWidgetEditor from "@/arches_vue_components/widgets/MapWidget/components/MapWidgetEditor.vue";
 import MapWidgetViewer from "@/arches_vue_components/widgets/MapWidget/components/MapWidgetViewer.vue";
 
 import { EDIT, VIEW } from "@/arches_vue_components/widgets/constants.ts";
@@ -12,16 +12,20 @@ import type { FeatureCollection } from "geojson";
 import type { GeoJSONFeatureCollectionAliasedNodeData } from "@/arches_vue_components/datatypes/geojson-feature-collection/types.ts";
 import type { MapWidgetProps } from "@/arches_vue_components/widgets/MapWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<MapWidgetProps>();
+const { aliasedNodeData, mode, value } = defineProps<MapWidgetProps>();
 
 const emit = defineEmits<{
-    "update:isLoading": [isLoading: boolean];
-    "update:value": [updatedValue: FeatureCollection];
-    "update:overlays": [];
-    "update:aliasedNodeData": [
-        updatedValue: GeoJSONFeatureCollectionAliasedNodeData,
-    ];
-    initialized: [updatedValue: GeoJSONFeatureCollectionAliasedNodeData];
+    (event: "update:isLoading", isLoading: boolean): void;
+    (event: "update:value", value: FeatureCollection): void;
+    (event: "update:overlays"): void;
+    (
+        event: "update:aliasedNodeData",
+        value: GeoJSONFeatureCollectionAliasedNodeData,
+    ): void;
+    (
+        event: "initialized",
+        value: GeoJSONFeatureCollectionAliasedNodeData,
+    ): void;
 }>();
 
 const resolvedAliasedNodeData = computed(
@@ -35,6 +39,7 @@ const editorRef =
 
 defineExpose({
     map: computed(() => editorRef.value?.map ?? null),
+    context: computed(() => editorRef.value?.context ?? null),
 });
 </script>
 
@@ -44,7 +49,8 @@ defineExpose({
         ref="editor"
         :card-x-node-x-widget-data="cardXNodeXWidgetData"
         :aliased-node-data="resolvedAliasedNodeData"
-        :render-context="renderContext"
+        :interaction-items="interactionItems"
+        :feature-popup-component="featurePopupComponent"
         @update:is-loading="emit('update:isLoading', $event)"
         @update:value="emit('update:value', $event)"
         @update:aliased-node-data="emit('update:aliasedNodeData', $event)"
