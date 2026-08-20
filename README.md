@@ -498,7 +498,6 @@ const { context } = defineProps<{ context: MapContext | null }>();
 </template>
 ```
 
-A tool rendered inside `MapComponent`'s own tree, meaning one of your own `interactionTools` entries instead of suppressing the drawer, doesn't need the `context` prop at all. Every built-in tool resolves it with `useResolvedMapContext(context, "MyTool")`, which checks the prop first and falls back to `inject(mapContextKey)`. That's what lets the same tool component work both ways: wired into `interactionTools` and rendered in-tree, or built standalone and handed a `context` from outside, like `MyDrawTools` above.
 
 ## Extending Arches Vue Components
 
