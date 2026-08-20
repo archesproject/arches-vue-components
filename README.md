@@ -194,7 +194,7 @@ Every widget's `aliasedNodeData`/`cardXNodeXWidgetData` prop is typed to one spe
 
 #### `@/arches_vue_components/components`
 
-The arches-agnostic map underneath `MapWidget` — see [Customizing the Map](#customizing-the-map).
+The arches-agnostic map underneath `MapWidget`. See [Customizing the Map](#customizing-the-map) for a full example.
 
 | Export | Description |
 |--------|-------------|
@@ -226,8 +226,8 @@ The arches-agnostic map underneath `MapWidget` — see [Customizing the Map](#cu
 | Name | Type | Description |
 |------|------|--------------|
 | `map` | `ShallowRef<maplibregl.Map \| null>` | The live MapLibre instance |
-| `isLoading`, `basemaps`, `overlays`, `drawnFeatures`, `selectedDrawnFeature`, `allowedGeometryTypes` | — | Reactive state, same values driving the built-in tools |
-| `setDrawMode(mode)`, `selectDrawnFeature(feature)`, `deleteSelectedDrawnFeature()`, `deleteAllDrawnFeatures()`, `setBufferForSelectedFeature(distance, units)`, `addFeatures(features)` | — | Actions; every built-in tool calls these instead of touching MapLibre/mapbox-gl-draw directly |
+| `isLoading`, `basemaps`, `overlays`, `drawnFeatures`, `selectedDrawnFeature`, `allowedGeometryTypes` | | Reactive state. Same values the built-in tools already use |
+| `setDrawMode(mode)`, `selectDrawnFeature(feature)`, `deleteSelectedDrawnFeature()`, `deleteAllDrawnFeatures()`, `setBufferForSelectedFeature(distance, units)`, `addFeatures(features)` | | Actions. Every built-in tool calls these instead of touching MapLibre or mapbox-gl-draw directly |
 
 #### `@/arches_vue_components/generics`
 
@@ -429,7 +429,7 @@ export type { RatingWidgetProps } from "@/arches_vue_components/widgets/RatingWi
 
 ## Customizing the Map
 
-`MapWidget` is a thin adapter over `MapComponent` — it translates a node's `cardXNodeXWidgetData.config` into `MapComponent`'s props and back. Embedding `MapComponent` directly skips that adapter, for uses that have nothing to do with editing a resource, like a search filter.
+`MapWidget` is a thin adapter over `MapComponent`. It translates a node's `cardXNodeXWidgetData.config` into `MapComponent`'s props and back. If you're not editing a resource at all, say you're building a search filter, embed `MapComponent` directly and skip the adapter.
 
 The example below replaces the default interactions drawer with a custom floating panel, replaces the feature-click popup, and constrains drawing to a single point:
 
@@ -478,7 +478,7 @@ const mapRef = useTemplateRef<InstanceType<typeof MapComponent>>("map");
 </style>
 ```
 
-`interactionTools: []` suppresses the built-in drawer entirely, rather than swapping in a different set of tools for it. `context` — exposed via `defineExpose` on `MapComponent` — is the same reactive `MapContext` every built-in tool already reads and writes (`drawnFeatures`, `selectedDrawnFeature`, actions like `setDrawMode`/`addFeatures`/`deleteAllDrawnFeatures`), so `MyDrawTools` drives the exact same map state. It can look like a column of buttons, a floating toolbar, or anything else — the map doesn't care.
+`interactionTools: []` suppresses the built-in drawer entirely, rather than swapping in a different set of tools for it. `context` comes from `MapComponent`'s `defineExpose`, and it's the same reactive `MapContext` every built-in tool already reads and writes: `drawnFeatures`, `selectedDrawnFeature`, actions like `setDrawMode`/`addFeatures`/`deleteAllDrawnFeatures`. So `MyDrawTools` is driving the exact same map state. It can look like a column of buttons, a floating toolbar, whatever you want. The map doesn't care.
 
 `MyDrawTools.vue` and `MySearchResultPopup.vue` are just regular components; the pattern that matters is how they reach `MapContext`:
 
@@ -498,7 +498,7 @@ const { context } = defineProps<{ context: MapContext | null }>();
 </template>
 ```
 
-A tool rendered _inside_ `MapComponent`'s own tree (one of your own `interactionTools` entries, instead of suppressing the drawer) doesn't need the `context` prop at all — every built-in tool resolves it with `useResolvedMapContext(contextProp, "MyTool")`, which checks the prop first and falls back to `inject(mapContextKey)`. That's what makes the same tool component work both ways: wired into `interactionTools` and rendered in-tree, or built standalone and handed a `context` from outside, as above.
+A tool rendered inside `MapComponent`'s own tree, meaning one of your own `interactionTools` entries instead of suppressing the drawer, doesn't need the `context` prop at all. Every built-in tool resolves it with `useResolvedMapContext(contextProp, "MyTool")`, which checks the prop first and falls back to `inject(mapContextKey)`. That's what lets the same tool component work both ways: wired into `interactionTools` and rendered in-tree, or built standalone and handed a `context` from outside, like `MyDrawTools` above.
 
 ## Extending Arches Vue Components
 
