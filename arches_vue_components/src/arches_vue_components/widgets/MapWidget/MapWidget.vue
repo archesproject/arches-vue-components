@@ -15,17 +15,11 @@ import type { MapWidgetProps } from "@/arches_vue_components/widgets/MapWidget/t
 const { aliasedNodeData, mode, value } = defineProps<MapWidgetProps>();
 
 const emit = defineEmits<{
-    (event: "update:isLoading", isLoading: boolean): void;
-    (event: "update:value", value: FeatureCollection): void;
-    (event: "update:overlays"): void;
-    (
-        event: "update:aliasedNodeData",
-        value: GeoJSONFeatureCollectionAliasedNodeData,
-    ): void;
-    (
-        event: "initialized",
-        value: GeoJSONFeatureCollectionAliasedNodeData,
-    ): void;
+    "update:isLoading": [isLoading: boolean];
+    "update:value": [value: FeatureCollection];
+    "update:overlays": [];
+    "update:aliasedNodeData": [value: GeoJSONFeatureCollectionAliasedNodeData];
+    initialized: [value: GeoJSONFeatureCollectionAliasedNodeData];
 }>();
 
 const resolvedAliasedNodeData = computed(

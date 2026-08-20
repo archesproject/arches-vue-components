@@ -13,11 +13,11 @@ import {
 } from "@/arches_vue_components/components/MapComponent/composables/useMapContext.ts";
 import { useDefaultMapInteractionItems } from "@/arches_vue_components/components/MapComponent/useDefaultMapInteractionItems.ts";
 
-import type { MapComponentEmit } from "@/arches_vue_components/components/MapComponent/composables/useMapContext.ts";
-import type { MapInteractionItem } from "@/arches_vue_components/components/MapComponent/types.ts";
-
 import type { Component } from "vue";
 import type { FeatureCollection } from "geojson";
+
+import type { MapComponentEmit } from "@/arches_vue_components/components/MapComponent/composables/useMapContext.ts";
+import type { MapInteractionItem } from "@/arches_vue_components/components/MapComponent/types.ts";
 
 const {
     value = undefined,
@@ -73,6 +73,9 @@ const { context, popupContainer, popupFeatures } = useMapContext(
     emit,
     mapContainer,
 );
+
+defineExpose({ map: context.map, context });
+
 const resolvedFeaturePopupComponent = computed(
     () => featurePopupComponent ?? FeaturePopup,
 );
@@ -82,8 +85,6 @@ const resolvedInteractionItems = computed(
 );
 
 provide(mapContextKey, context);
-
-defineExpose({ map: context.map, context });
 </script>
 
 <template>
