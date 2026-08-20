@@ -1,12 +1,12 @@
-<!--
- This is a one-off component because the Quill-based `Editor`
+<!-- 
+ This is a one-off component because the Quill-based `Editor` 
  component uses a non-labellable `div` for its input element
  -->
 
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref } from "vue";
 
-const { fieldId } = defineProps<{ fieldId: string }>();
+const { nodeAlias } = defineProps<{ nodeAlias: string }>();
 
 const wrapperElementRef = ref<HTMLElement | null>(null);
 
@@ -60,7 +60,7 @@ onMounted(() => {
 
     const associatedLabelElement =
         Array.from(document.getElementsByTagName("label")).find(
-            (labelElement) => labelElement.htmlFor === fieldId,
+            (labelElement) => labelElement.htmlFor === nodeAlias,
         ) ?? null;
 
     if (associatedLabelElement) {
@@ -90,7 +90,7 @@ onBeforeUnmount(() => {
 
 <template>
     <div
-        :id="fieldId"
+        :id="nodeAlias"
         ref="wrapperElementRef"
         tabindex="-1"
     >

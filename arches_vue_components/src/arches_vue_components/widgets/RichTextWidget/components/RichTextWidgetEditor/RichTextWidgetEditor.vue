@@ -2,9 +2,10 @@
 import { ref, watchEffect } from "vue";
 
 import { useGettext } from "vue3-gettext";
+import Editor from "primevue/editor";
 import Select from "primevue/select";
 
-import RichTextComponent from "@/arches_vue_components/components/RichTextComponent/RichTextComponent.vue";
+import FocusController from "@/arches_vue_components/widgets/RichTextWidget/components/RichTextWidgetEditor/components/FocusController.vue";
 
 import { fetchLanguages } from "@/arches_vue_components/widgets/api.ts";
 import { buildStringAliasedNodeData } from "@/arches_vue_components/datatypes/string/utils.ts";
@@ -90,7 +91,10 @@ watchEffect(() => {
     }
 });
 
-function onUpdateModelValue(updatedValue: string) {
+function onUpdateModelValue(updatedValue: string | undefined) {
+    if (updatedValue === undefined) {
+        updatedValue = "";
+    }
     const newNodeValue = {
         ...managedNodeValue.value,
         [selectedLanguage.value!.code]: {
@@ -115,13 +119,15 @@ function onUpdateModelValue(updatedValue: string) {
             :option-label="(lang: Language) => `${lang.name} (${lang.code})`"
             :placeholder="$gettext('Language')"
         />
-        <RichTextComponent
-            :field-id="cardXNodeXWidgetData?.node.alias"
-            :placeholder="cardXNodeXWidgetData?.config.placeholder"
-            :required="cardXNodeXWidgetData?.node.isrequired"
-            :value="singleInputValue"
-            @update:value="onUpdateModelValue"
-        />
+        <FocusController :node-alias="cardXNodeXWidgetData?.node.alias ?? ''">
+            <Editor
+                :fluid="true"
+                :model-value="singleInputValue"
+                :placeholder="cardXNodeXWidgetData?.config.placeholder ?? ''"
+                :required="cardXNodeXWidgetData?.node.isrequired"
+                @update:model-value="onUpdateModelValue($event)"
+            />
+        </FocusController>
     </div>
 </template>
 
