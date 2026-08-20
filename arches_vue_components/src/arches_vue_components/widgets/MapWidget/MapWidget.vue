@@ -16,10 +16,12 @@ const { aliasedNodeData, mode, value } = defineProps<MapWidgetProps>();
 
 const emit = defineEmits<{
     "update:isLoading": [isLoading: boolean];
-    "update:value": [value: FeatureCollection];
+    "update:value": [updatedValue: FeatureCollection];
     "update:overlays": [];
-    "update:aliasedNodeData": [value: GeoJSONFeatureCollectionAliasedNodeData];
-    initialized: [value: GeoJSONFeatureCollectionAliasedNodeData];
+    "update:aliasedNodeData": [
+        updatedValue: GeoJSONFeatureCollectionAliasedNodeData,
+    ];
+    initialized: [updatedValue: GeoJSONFeatureCollectionAliasedNodeData];
 }>();
 
 const resolvedAliasedNodeData = computed(

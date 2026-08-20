@@ -28,15 +28,15 @@ const {
 
 const emit = defineEmits<{
     (event: "update:isLoading", isLoading: boolean): void;
-    (event: "update:value", value: FeatureCollection): void;
+    (event: "update:value", updatedValue: FeatureCollection): void;
     (event: "update:overlays"): void;
     (
         event: "update:aliasedNodeData",
-        value: GeoJSONFeatureCollectionAliasedNodeData,
+        updatedValue: GeoJSONFeatureCollectionAliasedNodeData,
     ): void;
     (
         event: "initialized",
-        value: GeoJSONFeatureCollectionAliasedNodeData,
+        updatedValue: GeoJSONFeatureCollectionAliasedNodeData,
     ): void;
 }>();
 
