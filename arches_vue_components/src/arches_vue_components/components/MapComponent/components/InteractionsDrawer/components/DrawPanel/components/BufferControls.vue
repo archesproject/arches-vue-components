@@ -70,12 +70,16 @@ watch(
 
 <template>
     <Panel
-        class="buffer-controls-panel"
         :pt="{ title: { style: { 'font-weight': 500 } } }"
         :header="$gettext('Buffer Selected Feature')"
     >
         <div class="buffer-controls">
-            <label for="buff-distance">{{ $gettext("Distance") }}</label>
+            <label
+                class="buffer-controls-label"
+                for="buff-distance"
+            >
+                {{ $gettext("Distance") }}
+            </label>
             <InputNumber
                 id="buff-distance"
                 v-model="bufferDistance"
@@ -97,14 +101,15 @@ watch(
 </template>
 
 <style scoped>
-.buffer-controls-panel {
-    margin-block-start: 0.75rem;
-}
-
 .buffer-controls {
     align-items: baseline;
     display: flex;
     flex-direction: row;
     gap: 1rem;
+}
+
+.buffer-controls-label {
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 </style>

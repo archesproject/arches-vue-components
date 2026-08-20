@@ -89,6 +89,5 @@ function onSelect(featureId: string): void {
 <style scoped>
 .drawn-features-list {
     border: none;
-    margin-block-end: 0.75rem;
 }
 </style>

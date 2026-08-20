@@ -23,33 +23,40 @@ const { $gettext } = useGettext();
 </script>
 
 <template>
-    <ShapefileDropZone :context="resolvedContext" />
-    <DrawControls :context="resolvedContext" />
-    <BufferControls :context="resolvedContext" />
-    <DrawnFeaturesList :context="resolvedContext" />
-    <div class="clear-btns">
-        <Button
-            size="large"
-            severity="secondary"
-            @click="deleteSelectedDrawnFeature"
-        >
-            {{ $gettext("Remove Selected") }}
-        </Button>
-        <Button
-            size="large"
-            severity="secondary"
-            @click="deleteAllDrawnFeatures"
-        >
-            {{ $gettext("Remove All") }}
-        </Button>
+    <div class="draw-panel">
+        <ShapefileDropZone :context="resolvedContext" />
+        <DrawControls :context="resolvedContext" />
+        <BufferControls :context="resolvedContext" />
+        <DrawnFeaturesList :context="resolvedContext" />
+        <div class="clear-btns">
+            <Button
+                size="large"
+                severity="secondary"
+                @click="deleteSelectedDrawnFeature"
+            >
+                {{ $gettext("Remove Selected") }}
+            </Button>
+            <Button
+                size="large"
+                severity="secondary"
+                @click="deleteAllDrawnFeatures"
+            >
+                {{ $gettext("Remove All") }}
+            </Button>
+        </div>
     </div>
 </template>
 
 <style scoped>
+.draw-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 .clear-btns {
     display: flex;
     flex-direction: row;
     gap: 1rem;
-    padding-block-start: 1rem;
 }
 </style>

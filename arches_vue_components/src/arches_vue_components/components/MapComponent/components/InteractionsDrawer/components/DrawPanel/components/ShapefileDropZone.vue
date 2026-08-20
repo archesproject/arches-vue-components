@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, useTemplateRef } from "vue";
 
 import { useGettext } from "vue3-gettext";
 
@@ -26,6 +26,9 @@ const { $gettext } = useGettext();
 
 const isLoading = ref(false);
 const errorMessage = ref<string | null>(null);
+
+const fileUploadRef =
+    useTemplateRef<InstanceType<typeof FileUpload>>("fileUpload");
 
 async function onSelect(event: { files: File[] }): Promise<void> {
     const file = event.files[0];
@@ -69,11 +72,18 @@ async function onSelect(event: { files: File[] }): Promise<void> {
         isLoading.value = false;
     }
 }
+
+function openFileChooser(): void {
+    // @ts-expect-error FileUpload does not have a type definition for $el
+    const rootElement = fileUploadRef.value?.$el;
+    rootElement?.querySelector('input[type="file"]')?.click();
+}
 </script>
 
 <template>
     <div class="shapefile-drop-zone">
         <FileUpload
+            ref="fileUpload"
             accept=".zip,.shp"
             :multiple="false"
             :show-cancel-button="false"
@@ -82,7 +92,10 @@ async function onSelect(event: { files: File[] }): Promise<void> {
             @select="onSelect($event)"
         >
             <template #content>
-                <div class="drop-zone-content">
+                <div
+                    class="drop-zone-content"
+                    @click="openFileChooser"
+                >
                     <ProgressSpinner
                         v-if="isLoading"
                         style="width: 2rem; height: 2rem"
@@ -121,6 +134,14 @@ async function onSelect(event: { files: File[] }): Promise<void> {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+:deep(.p-fileupload-header) {
+    display: none;
+}
+
+:deep(.p-fileupload-content) {
+    padding: 0;
 }
 
 .drop-zone-content {

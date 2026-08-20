@@ -77,7 +77,12 @@ function clearDrawSelection(): void {
 
 <template>
     <div class="draw-controls">
-        <label for="draw-type">{{ $gettext("Draw type") }}</label>
+        <label
+            class="draw-controls-label"
+            for="draw-type"
+        >
+            {{ $gettext("Draw type") }}
+        </label>
         <Select
             id="draw-type"
             option-label="label"
@@ -98,6 +103,10 @@ function clearDrawSelection(): void {
     display: flex;
     flex-direction: row;
     gap: 1rem;
-    margin-block-start: 0.9375rem;
+}
+
+.draw-controls-label {
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 </style>
