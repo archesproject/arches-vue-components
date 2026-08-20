@@ -204,7 +204,7 @@ The arches-agnostic map underneath `MapWidget`. See [Customizing the Map](#custo
 | `MapInteractionTool` | Shape of one entry in `interactionTools` |
 | `InteractionsDrawer`, `BasemapPanel`, `OverlayPanel`, `DrawPanel`, `DrawControls`, `BufferControls`, `DrawnFeaturesList`, `ShapefileDropZone`, `FeaturePopup` | The built-in interaction tools and default feature popup, exported for reuse/composition |
 | `useMapContext` | Composable `MapComponent` itself calls; not typically used directly |
-| `useResolvedMapContext(contextProp, componentName)` | Resolves a `MapContext` from a prop, falling back to `inject(mapContextKey)`; what every built-in tool uses so it works both in-tree and passed a `context` explicitly |
+| `useResolvedMapContext(context, componentName)` | Resolves a `MapContext` from a prop, falling back to `inject(mapContextKey)`; what every built-in tool uses so it works both in-tree and passed a `context` explicitly |
 | `mapContextKey` | The `provide`/`inject` key `MapComponent` provides `MapContext` under |
 | `useDefaultMapInteractionTools()` | Returns the default Draw/Basemap/Overlays tool set, for composing with your own |
 
@@ -498,7 +498,7 @@ const { context } = defineProps<{ context: MapContext | null }>();
 </template>
 ```
 
-A tool rendered inside `MapComponent`'s own tree, meaning one of your own `interactionTools` entries instead of suppressing the drawer, doesn't need the `context` prop at all. Every built-in tool resolves it with `useResolvedMapContext(contextProp, "MyTool")`, which checks the prop first and falls back to `inject(mapContextKey)`. That's what lets the same tool component work both ways: wired into `interactionTools` and rendered in-tree, or built standalone and handed a `context` from outside, like `MyDrawTools` above.
+A tool rendered inside `MapComponent`'s own tree, meaning one of your own `interactionTools` entries instead of suppressing the drawer, doesn't need the `context` prop at all. Every built-in tool resolves it with `useResolvedMapContext(context, "MyTool")`, which checks the prop first and falls back to `inject(mapContextKey)`. That's what lets the same tool component work both ways: wired into `interactionTools` and rendered in-tree, or built standalone and handed a `context` from outside, like `MyDrawTools` above.
 
 ## Extending Arches Vue Components
 

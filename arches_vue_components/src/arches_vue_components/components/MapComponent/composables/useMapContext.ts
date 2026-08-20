@@ -81,18 +81,18 @@ export interface MapComponentEmit {
 export const mapContextKey: InjectionKey<MapContext> = Symbol("mapContext");
 
 export function useResolvedMapContext(
-    contextProp: MapContext | undefined,
+    context: MapContext | undefined,
     componentName: string,
 ): MapContext {
-    const context = contextProp ?? inject(mapContextKey);
+    const resolvedContext = context ?? inject(mapContextKey);
 
-    if (!context) {
+    if (!resolvedContext) {
         throw new Error(
             `${componentName} requires a MapContext: pass it via the \`context\` prop, or render this component inside a MapComponent's tree.`,
         );
     }
 
-    return context;
+    return resolvedContext;
 }
 
 export function useMapContext(
