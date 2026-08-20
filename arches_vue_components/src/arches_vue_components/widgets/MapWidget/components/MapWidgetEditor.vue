@@ -9,20 +9,20 @@ import type { Component } from "vue";
 import type { FeatureCollection } from "geojson";
 
 import type { GeoJSONFeatureCollectionAliasedNodeData } from "@/arches_vue_components/datatypes/geojson-feature-collection/types.ts";
-import type { MapInteractionItem } from "@/arches_vue_components/components/MapComponent/types.ts";
+import type { MapInteractionTool } from "@/arches_vue_components/components/MapComponent/types.ts";
 import type { MapCardXNodeXWidgetData } from "@/arches_vue_components/widgets/MapWidget/types.ts";
 
 const {
     aliasedNodeData,
     cardXNodeXWidgetData = undefined,
     value = undefined,
-    interactionItems = undefined,
+    interactionTools = undefined,
     featurePopupComponent = undefined,
 } = defineProps<{
     aliasedNodeData: GeoJSONFeatureCollectionAliasedNodeData | null;
     cardXNodeXWidgetData?: MapCardXNodeXWidgetData;
     value?: FeatureCollection | null;
-    interactionItems?: MapInteractionItem[];
+    interactionTools?: MapInteractionTool[];
     featurePopupComponent?: Component;
 }>();
 
@@ -46,7 +46,7 @@ const resolvedAliasedNodeData = computed(
         buildGeoJSONFeatureCollectionAliasedNodeData(value ?? null),
 );
 
-const geometryTypes = computed(
+const resolvedAllowedGeometryTypes = computed(
     () =>
         cardXNodeXWidgetData?.config?.geometryTypes?.map((geometryType) =>
             geometryType.id.toLowerCase(),
@@ -89,8 +89,8 @@ function onInitialized(initialValue: FeatureCollection): void {
         :min-zoom="cardXNodeXWidgetData?.config?.minZoom"
         :max-zoom="cardXNodeXWidgetData?.config?.maxZoom"
         :basemap="cardXNodeXWidgetData?.config?.basemap"
-        :geometry-types="geometryTypes"
-        :interaction-items="interactionItems"
+        :allowed-geometry-types="resolvedAllowedGeometryTypes"
+        :interaction-tools="interactionTools"
         :max-features="cardXNodeXWidgetData?.config?.maxDrawnFeatures"
         :feature-popup-component="featurePopupComponent"
         @update:is-loading="emit('update:isLoading', $event)"

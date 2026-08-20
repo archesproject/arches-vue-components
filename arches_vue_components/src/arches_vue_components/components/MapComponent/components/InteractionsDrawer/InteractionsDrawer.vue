@@ -5,7 +5,7 @@ import Divider from "primevue/divider";
 import { useInteractionPanel } from "@/arches_vue_components/components/MapComponent/components/InteractionsDrawer/composables/useInteractionPanel.ts";
 
 import type {
-    MapInteractionItem,
+    MapInteractionTool,
     MapContext,
 } from "@/arches_vue_components/components/MapComponent/types.ts";
 
@@ -16,7 +16,7 @@ const {
     defaultOpenIndex = undefined,
 } = defineProps<{
     context: MapContext;
-    items: MapInteractionItem[];
+    items: MapInteractionTool[];
     position?: "left" | "right";
     defaultOpenIndex?: number;
 }>();

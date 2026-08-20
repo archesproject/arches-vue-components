@@ -46,7 +46,7 @@ export interface MapLayer {
     visible?: boolean;
 }
 
-export interface MapInteractionItem {
+export interface MapInteractionTool {
     name: string;
     header: string;
     component: Component;
@@ -63,7 +63,7 @@ export interface MapContext {
     overlays: Ref<MapLayer[]>;
     drawnFeatures: ShallowRef<Feature[]>;
     selectedDrawnFeature: Ref<Feature | null>;
-    geometryTypes: ComputedRef<string[] | null>;
+    allowedGeometryTypes: ComputedRef<string[] | null>;
     setDrawMode: (mode: DrawMode | null) => void;
     selectDrawnFeature: (feature: Feature) => void;
     deleteSelectedDrawnFeature: () => void;
@@ -107,9 +107,9 @@ export interface MapComponentProps {
     minZoom?: number;
     maxZoom?: number;
     basemap?: string;
-    geometryTypes?: string[];
+    allowedGeometryTypes?: string[];
     renderContext?: string;
-    interactionItems?: MapInteractionItem[];
+    interactionTools?: MapInteractionTool[];
     maxFeatures?: number;
     featurePopupComponent?: Component;
 }

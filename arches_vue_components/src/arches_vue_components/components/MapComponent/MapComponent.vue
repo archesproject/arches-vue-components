@@ -11,13 +11,13 @@ import {
     mapContextKey,
     useMapContext,
 } from "@/arches_vue_components/components/MapComponent/composables/useMapContext.ts";
-import { useDefaultMapInteractionItems } from "@/arches_vue_components/components/MapComponent/useDefaultMapInteractionItems.ts";
+import { useDefaultMapInteractionTools } from "@/arches_vue_components/components/MapComponent/useDefaultMapInteractionTools.ts";
 
 import type { Component } from "vue";
 import type { FeatureCollection } from "geojson";
 
 import type { MapComponentEmit } from "@/arches_vue_components/components/MapComponent/composables/useMapContext.ts";
-import type { MapInteractionItem } from "@/arches_vue_components/components/MapComponent/types.ts";
+import type { MapInteractionTool } from "@/arches_vue_components/components/MapComponent/types.ts";
 
 const {
     value = undefined,
@@ -29,9 +29,9 @@ const {
     minZoom = undefined,
     maxZoom = undefined,
     basemap = undefined,
-    geometryTypes = undefined,
+    allowedGeometryTypes = undefined,
     renderContext = undefined,
-    interactionItems = undefined,
+    interactionTools = undefined,
     maxFeatures = undefined,
     featurePopupComponent = undefined,
 } = defineProps<{
@@ -44,9 +44,9 @@ const {
     minZoom?: number;
     maxZoom?: number;
     basemap?: string;
-    geometryTypes?: string[];
+    allowedGeometryTypes?: string[];
     renderContext?: string;
-    interactionItems?: MapInteractionItem[];
+    interactionTools?: MapInteractionTool[];
     maxFeatures?: number;
     featurePopupComponent?: Component;
 }>();
@@ -66,7 +66,7 @@ const { context, popupContainer, popupFeatures } = useMapContext(
         minZoom,
         maxZoom,
         basemap,
-        geometryTypes,
+        allowedGeometryTypes,
         renderContext,
         maxFeatures,
     },
@@ -79,9 +79,9 @@ defineExpose({ map: context.map, context });
 const resolvedFeaturePopupComponent = computed(
     () => featurePopupComponent ?? FeaturePopup,
 );
-const defaultMapInteractionItems = useDefaultMapInteractionItems();
-const resolvedInteractionItems = computed(
-    () => interactionItems ?? defaultMapInteractionItems,
+const defaultMapInteractionTools = useDefaultMapInteractionTools();
+const resolvedInteractionTools = computed(
+    () => interactionTools ?? defaultMapInteractionTools,
 );
 
 provide(mapContextKey, context);
@@ -98,10 +98,10 @@ provide(mapContextKey, context);
             class="map-loading-skeleton"
         />
         <InteractionsDrawer
-            v-if="context.map.value && resolvedInteractionItems.length"
+            v-if="context.map.value && resolvedInteractionTools.length"
             position="right"
             :context="context"
-            :items="resolvedInteractionItems"
+            :items="resolvedInteractionTools"
             :default-open-index="0"
         />
         <Toast group="map-component" />

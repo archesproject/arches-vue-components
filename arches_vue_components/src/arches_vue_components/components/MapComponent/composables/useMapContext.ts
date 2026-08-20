@@ -110,7 +110,7 @@ export function useMapContext(
         minZoom?: number;
         maxZoom?: number;
         basemap?: string;
-        geometryTypes?: string[];
+        allowedGeometryTypes?: string[];
         renderContext?: string;
         maxFeatures?: number;
     },
@@ -146,7 +146,9 @@ export function useMapContext(
             ),
     );
 
-    const geometryTypes = computed(() => props.geometryTypes ?? null);
+    const allowedGeometryTypes = computed(
+        () => props.allowedGeometryTypes ?? null,
+    );
 
     watch(isLoading, (newValue) => {
         emit("update:isLoading", newValue);
@@ -673,7 +675,7 @@ export function useMapContext(
         overlays,
         drawnFeatures,
         selectedDrawnFeature,
-        geometryTypes,
+        allowedGeometryTypes,
         setDrawMode,
         selectDrawnFeature,
         deleteSelectedDrawnFeature,

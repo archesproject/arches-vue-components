@@ -4,9 +4,9 @@ import BasemapPanel from "@/arches_vue_components/components/MapComponent/compon
 import DrawPanel from "@/arches_vue_components/components/MapComponent/components/InteractionsDrawer/components/DrawPanel/DrawPanel.vue";
 import OverlayPanel from "@/arches_vue_components/components/MapComponent/components/InteractionsDrawer/components/OverlayPanel.vue";
 
-import type { MapInteractionItem } from "@/arches_vue_components/components/MapComponent/types.ts";
+import type { MapInteractionTool } from "@/arches_vue_components/components/MapComponent/types.ts";
 
-export function useDefaultMapInteractionItems(): MapInteractionItem[] {
+export function useDefaultMapInteractionTools(): MapInteractionTool[] {
     const { $gettext } = useGettext();
 
     return [

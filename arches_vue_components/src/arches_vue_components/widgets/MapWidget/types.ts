@@ -4,7 +4,7 @@ import type { FeatureCollection } from "geojson";
 import type { CardXNodeXWidgetData } from "@/arches_vue_components/types.ts";
 import type { BaseWidgetProps } from "@/arches_vue_components/widgets/types.ts";
 import type { GeoJSONFeatureCollectionAliasedNodeData } from "@/arches_vue_components/datatypes/geojson-feature-collection/types.ts";
-import type { MapInteractionItem } from "@/arches_vue_components/components/MapComponent/types.ts";
+import type { MapInteractionTool } from "@/arches_vue_components/components/MapComponent/types.ts";
 
 export interface GeometryTypeConfig {
     id: string;
@@ -40,6 +40,6 @@ export interface MapWidgetProps extends BaseWidgetProps {
     cardXNodeXWidgetData?: MapCardXNodeXWidgetData;
     aliasedNodeData?: GeoJSONFeatureCollectionAliasedNodeData | null;
     value?: FeatureCollection | null;
-    interactionItems?: MapInteractionItem[];
+    interactionTools?: MapInteractionTool[];
     featurePopupComponent?: Component;
 }

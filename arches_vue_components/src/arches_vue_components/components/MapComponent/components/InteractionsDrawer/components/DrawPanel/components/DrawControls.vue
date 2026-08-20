@@ -25,7 +25,7 @@ const { context: contextProp = undefined } = defineProps<{
     context?: MapContext;
 }>();
 
-const { map, geometryTypes, selectedDrawnFeature, setDrawMode } =
+const { map, allowedGeometryTypes, selectedDrawnFeature, setDrawMode } =
     useResolvedMapContext(contextProp, "DrawControls");
 
 const { $gettext } = useGettext();
@@ -45,7 +45,7 @@ const allOptions = [
 ];
 
 const options = computed(() => {
-    const types = geometryTypes.value;
+    const types = allowedGeometryTypes.value;
     if (!types?.length) return allOptions;
     return allOptions.filter((opt) => types.includes(opt.code));
 });

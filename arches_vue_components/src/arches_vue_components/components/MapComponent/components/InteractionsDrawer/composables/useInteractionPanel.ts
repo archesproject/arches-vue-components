@@ -1,23 +1,23 @@
 import { computed, onMounted, ref, shallowRef } from "vue";
 
 import type { Component, ComputedRef, Ref, ShallowRef } from "vue";
-import type { MapInteractionItem } from "@/arches_vue_components/components/MapComponent/types.ts";
+import type { MapInteractionTool } from "@/arches_vue_components/components/MapComponent/types.ts";
 
 export interface UseInteractionPanelReturn {
-    selectedItem: ShallowRef<MapInteractionItem | null>;
+    selectedItem: ShallowRef<MapInteractionTool | null>;
     selectedComponent: ComputedRef<Component | null>;
     isOverlayVisible: Ref<boolean>;
     headerContent: ComputedRef<string | null>;
-    openPanel: (item: MapInteractionItem) => void;
+    openPanel: (item: MapInteractionTool) => void;
     closePanel: () => void;
-    onItemClick: (item: MapInteractionItem) => void;
+    onItemClick: (item: MapInteractionTool) => void;
 }
 
 export function useInteractionPanel(
-    items: MapInteractionItem[],
+    items: MapInteractionTool[],
     defaultOpenIndex?: number,
 ): UseInteractionPanelReturn {
-    const selectedItem = shallowRef<MapInteractionItem | null>(null);
+    const selectedItem = shallowRef<MapInteractionTool | null>(null);
     const isOverlayVisible = ref(false);
 
     const selectedComponent = computed(
@@ -25,7 +25,7 @@ export function useInteractionPanel(
     );
     const headerContent = computed(() => selectedItem.value?.header ?? null);
 
-    function openPanel(item: MapInteractionItem): void {
+    function openPanel(item: MapInteractionTool): void {
         selectedItem.value = item;
         isOverlayVisible.value = true;
     }
@@ -34,7 +34,7 @@ export function useInteractionPanel(
         isOverlayVisible.value = false;
     }
 
-    function onItemClick(item: MapInteractionItem): void {
+    function onItemClick(item: MapInteractionTool): void {
         if (selectedItem.value === item) {
             isOverlayVisible.value = !isOverlayVisible.value;
         } else {

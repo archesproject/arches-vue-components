@@ -12,7 +12,7 @@ import type { FeatureCollection } from "geojson";
 import type { GeoJSONFeatureCollectionAliasedNodeData } from "@/arches_vue_components/datatypes/geojson-feature-collection/types.ts";
 import type { MapWidgetProps } from "@/arches_vue_components/widgets/MapWidget/types.ts";
 
-const { aliasedNodeData, mode, value } = defineProps<MapWidgetProps>();
+const { aliasedNodeData, value } = defineProps<MapWidgetProps>();
 
 const emit = defineEmits<{
     "update:isLoading": [isLoading: boolean];
@@ -45,7 +45,7 @@ defineExpose({
         ref="editor"
         :card-x-node-x-widget-data="cardXNodeXWidgetData"
         :aliased-node-data="resolvedAliasedNodeData"
-        :interaction-items="interactionItems"
+        :interaction-tools="interactionTools"
         :feature-popup-component="featurePopupComponent"
         @update:is-loading="emit('update:isLoading', $event)"
         @update:value="emit('update:value', $event)"

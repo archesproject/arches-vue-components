@@ -9,7 +9,7 @@ export { default as MapComponent } from "@/arches_vue_components/components/MapC
 export { default as OverlayPanel } from "@/arches_vue_components/components/MapComponent/components/InteractionsDrawer/components/OverlayPanel.vue";
 export { default as ShapefileDropZone } from "@/arches_vue_components/components/MapComponent/components/InteractionsDrawer/components/DrawPanel/components/ShapefileDropZone.vue";
 
-export { useDefaultMapInteractionItems } from "@/arches_vue_components/components/MapComponent/useDefaultMapInteractionItems.ts";
+export { useDefaultMapInteractionTools } from "@/arches_vue_components/components/MapComponent/useDefaultMapInteractionTools.ts";
 export { useInteractionPanel } from "@/arches_vue_components/components/MapComponent/components/InteractionsDrawer/composables/useInteractionPanel.ts";
 export {
     useMapContext,
@@ -23,7 +23,7 @@ export type {
     FeaturePopupProps,
     MapComponentProps,
     MapContext,
-    MapInteractionItem,
+    MapInteractionTool,
     MapLayer,
     MapSource,
 } from "@/arches_vue_components/components/MapComponent/types.ts";
