@@ -41,7 +41,6 @@ defineExpose({
 
 onMounted(() => {
     emit("initialized", resolvedAliasedNodeData.value);
-    // ready is forwarded from MapWidgetEditor's real signal instead, via @ready in the template
 });
 </script>
 
