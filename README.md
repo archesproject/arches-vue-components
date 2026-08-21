@@ -205,6 +205,7 @@ The arches-agnostic map underneath `MapWidget`. See [Customizing the Map](#custo
 | `InteractionsDrawer`, `BasemapPanel`, `OverlayPanel`, `DrawPanel`, `DrawControls`, `BufferControls`, `DrawnFeaturesList`, `ShapefileDropZone`, `FeaturePopup` | The built-in interaction tools and default feature popup, exported for reuse/composition |
 | `useMapContext` | Composable `MapComponent` itself calls; not typically used directly |
 | `useResolvedMapContext(context, componentName)` | Resolves a `MapContext` from a prop, falling back to `inject(mapContextKey)`; what every built-in tool uses so it works both in-tree and passed a `context` explicitly |
+| `resolveDefaultOverlayLayers(candidateOverlayLayers)` | The default `overlayLayers` resolver `MapComponent` falls back to; compose on top of it (e.g. to also include `searchonly` layers) instead of reimplementing its filter/sort logic |
 | `mapContextKey` | The `provide`/`inject` key `MapComponent` provides `MapContext` under |
 | `useDefaultMapInteractionTools()` | Returns the default Draw/Basemap/Overlays tool set, for composing with your own |
 
@@ -219,7 +220,7 @@ The arches-agnostic map underneath `MapWidget`. See [Customizing the Map](#custo
 | `interactionTools` | `MapInteractionTool[]` | Sidebar tools shown in the drawer; `[]` renders no drawer at all; omitted defaults to Draw/Basemap/Overlays |
 | `featurePopupComponent` | `Component` | Replaces the default click-to-view-resource popup |
 | `maxFeatures` | `number` | Rejects drawing/adding features past this count, with an error toast |
-| `renderContext` | `string` | Set to `"search"` to include search-only overlay layers |
+| `overlayLayers` | `(candidateOverlayLayers: MapLayer[]) => MapLayer[]` | Resolves the final overlay layer set from the raw fetched candidates (`map_layers` + `resource_map_layers`); omitted defaults to `resolveDefaultOverlayLayers`, which excludes `searchonly` layers. Pass a resolver that also includes `layer.searchonly` layers to show them (see `resolveDefaultOverlayLayers` above) |
 
 `MapComponent` emits:
 

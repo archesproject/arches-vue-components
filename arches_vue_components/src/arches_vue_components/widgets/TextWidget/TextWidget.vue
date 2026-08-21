@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 
 import { useGettext } from "vue3-gettext";
 
@@ -21,12 +21,17 @@ const emit = defineEmits<{
     "update:value": [updatedValue: Record<string, LanguageValue> | null];
     "update:aliasedNodeData": [updatedValue: StringAliasedNodeData];
     initialized: [updatedValue: StringAliasedNodeData];
+    ready: [];
 }>();
 
 const { current } = useGettext();
 const resolvedAliasedNodeData = computed(
     () => aliasedNodeData ?? buildStringAliasedNodeData(value ?? null, current),
 );
+
+onMounted(() => {
+    emit("initialized", resolvedAliasedNodeData.value);
+});
 
 function onUpdateAliasedNodeData(
     updatedAliasedNodeData: StringAliasedNodeData,
@@ -43,11 +48,10 @@ function onUpdateAliasedNodeData(
         :aliased-node-data="resolvedAliasedNodeData"
         :render-context="renderContext"
         @update:aliased-node-data="onUpdateAliasedNodeData"
-        @initialized="emit('initialized', $event)"
+        @ready="emit('ready')"
     />
     <TextWidgetViewer
         v-if="mode === VIEW"
         :aliased-node-data="resolvedAliasedNodeData"
-        @initialized="emit('initialized', $event)"
     />
 </template>

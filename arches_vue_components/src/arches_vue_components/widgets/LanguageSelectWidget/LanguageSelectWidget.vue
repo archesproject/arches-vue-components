@@ -18,6 +18,7 @@ const emit = defineEmits<{
     "update:value": [updatedValue: string | null];
     "update:aliasedNodeData": [updatedValue: LanguageAliasedNodeData];
     initialized: [updatedValue: LanguageAliasedNodeData];
+    ready: [];
 }>();
 
 const languageStore = useLanguageStore();
@@ -44,6 +45,23 @@ const resolvedAliasedNodeData = computed(() => {
 
 watch(isLanguagesLoading, (isLoading) => emit("update:isLoading", isLoading));
 
+if (resolvedAliasedNodeData.value) {
+    emit("initialized", resolvedAliasedNodeData.value);
+    emit("ready");
+} else {
+    const stopWatchingForInitialAliasedNodeData = watch(
+        resolvedAliasedNodeData,
+        (updatedAliasedNodeData) => {
+            if (!updatedAliasedNodeData) {
+                return;
+            }
+            stopWatchingForInitialAliasedNodeData();
+            emit("initialized", updatedAliasedNodeData);
+            emit("ready");
+        },
+    );
+}
+
 function onUpdateAliasedNodeData(
     updatedAliasedNodeData: LanguageAliasedNodeData,
 ) {
@@ -58,11 +76,9 @@ function onUpdateAliasedNodeData(
         :card-x-node-x-widget-data="cardXNodeXWidgetData"
         :aliased-node-data="resolvedAliasedNodeData"
         @update:aliased-node-data="onUpdateAliasedNodeData"
-        @initialized="emit('initialized', $event)"
     />
     <LanguageSelectWidgetViewer
         v-if="mode === VIEW"
         :aliased-node-data="resolvedAliasedNodeData"
-        @initialized="emit('initialized', $event)"
     />
 </template>

@@ -17,7 +17,10 @@ import type { Component } from "vue";
 import type { FeatureCollection } from "geojson";
 
 import type { MapComponentEmit } from "@/arches_vue_components/components/MapComponent/composables/useMapContext.ts";
-import type { MapInteractionTool } from "@/arches_vue_components/components/MapComponent/types.ts";
+import type {
+    MapInteractionTool,
+    MapLayer,
+} from "@/arches_vue_components/components/MapComponent/types.ts";
 
 const {
     value = undefined,
@@ -30,7 +33,7 @@ const {
     maxZoom = undefined,
     basemap = undefined,
     allowedGeometryTypes = undefined,
-    renderContext = undefined,
+    overlayLayers = undefined,
     interactionTools = undefined,
     maxFeatures = undefined,
     featurePopupComponent = undefined,
@@ -45,7 +48,7 @@ const {
     maxZoom?: number;
     basemap?: string;
     allowedGeometryTypes?: string[];
-    renderContext?: string;
+    overlayLayers?: (candidateOverlayLayers: MapLayer[]) => MapLayer[];
     interactionTools?: MapInteractionTool[];
     maxFeatures?: number;
     featurePopupComponent?: Component;
@@ -67,7 +70,7 @@ const { context, popupContainer, popupFeatures } = useMapContext(
         maxZoom,
         basemap,
         allowedGeometryTypes,
-        renderContext,
+        overlayLayers,
         maxFeatures,
     },
     emit,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from "vue";
+import { computed, onMounted, useTemplateRef } from "vue";
 
 import MapWidgetEditor from "@/arches_vue_components/widgets/MapWidget/components/MapWidgetEditor.vue";
 import MapWidgetViewer from "@/arches_vue_components/widgets/MapWidget/components/MapWidgetViewer.vue";
@@ -22,6 +22,7 @@ const emit = defineEmits<{
         updatedValue: GeoJSONFeatureCollectionAliasedNodeData,
     ];
     initialized: [updatedValue: GeoJSONFeatureCollectionAliasedNodeData];
+    ready: [];
 }>();
 
 const resolvedAliasedNodeData = computed(
@@ -37,6 +38,11 @@ defineExpose({
     map: computed(() => editorRef.value?.map ?? null),
     context: computed(() => editorRef.value?.context ?? null),
 });
+
+onMounted(() => {
+    emit("initialized", resolvedAliasedNodeData.value);
+    // ready is forwarded from MapWidgetEditor's real signal instead, via @ready in the template
+});
 </script>
 
 <template>
@@ -51,7 +57,7 @@ defineExpose({
         @update:value="emit('update:value', $event)"
         @update:aliased-node-data="emit('update:aliasedNodeData', $event)"
         @update:overlays="emit('update:overlays')"
-        @initialized="emit('initialized', $event)"
+        @ready="emit('ready')"
     />
     <MapWidgetViewer
         v-if="mode === VIEW"

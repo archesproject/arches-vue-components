@@ -108,7 +108,7 @@ export interface MapComponentProps {
     maxZoom?: number;
     basemap?: string;
     allowedGeometryTypes?: string[];
-    renderContext?: string;
+    overlayLayers?: (candidateOverlayLayers: MapLayer[]) => MapLayer[];
     interactionTools?: MapInteractionTool[];
     maxFeatures?: number;
     featurePopupComponent?: Component;

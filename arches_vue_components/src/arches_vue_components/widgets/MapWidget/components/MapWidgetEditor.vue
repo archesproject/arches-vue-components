@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, useTemplateRef } from "vue";
+import { computed, useTemplateRef } from "vue";
 
 import MapComponent from "@/arches_vue_components/components/MapComponent/MapComponent.vue";
 
@@ -34,10 +34,7 @@ const emit = defineEmits<{
         event: "update:aliasedNodeData",
         updatedValue: GeoJSONFeatureCollectionAliasedNodeData,
     ): void;
-    (
-        event: "initialized",
-        updatedValue: GeoJSONFeatureCollectionAliasedNodeData,
-    ): void;
+    (event: "ready"): void;
 }>();
 
 const resolvedAliasedNodeData = computed(
@@ -68,10 +65,6 @@ function onValueUpdate(updatedValue: FeatureCollection): void {
         buildGeoJSONFeatureCollectionAliasedNodeData(updatedValue),
     );
 }
-
-onMounted(() => {
-    emit("initialized", resolvedAliasedNodeData.value);
-});
 </script>
 
 <template>
@@ -93,5 +86,6 @@ onMounted(() => {
         @update:is-loading="emit('update:isLoading', $event)"
         @update:value="onValueUpdate"
         @update:overlays="emit('update:overlays')"
+        @ready="emit('ready')"
     />
 </template>
