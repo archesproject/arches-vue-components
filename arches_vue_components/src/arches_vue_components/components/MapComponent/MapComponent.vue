@@ -33,7 +33,7 @@ const {
     maxZoom = undefined,
     basemap = undefined,
     allowedGeometryTypes = undefined,
-    overlayLayers = undefined,
+    resolveOverlayLayers = undefined,
     interactionTools = undefined,
     maxFeatures = undefined,
     featurePopupComponent = undefined,
@@ -48,7 +48,7 @@ const {
     maxZoom?: number;
     basemap?: string;
     allowedGeometryTypes?: string[];
-    overlayLayers?: (candidateOverlayLayers: MapLayer[]) => MapLayer[];
+    resolveOverlayLayers?: (candidateOverlayLayers: MapLayer[]) => MapLayer[];
     interactionTools?: MapInteractionTool[];
     maxFeatures?: number;
     featurePopupComponent?: Component;
@@ -70,7 +70,7 @@ const { context, popupContainer, popupFeatures } = useMapContext(
         maxZoom,
         basemap,
         allowedGeometryTypes,
-        overlayLayers,
+        resolveOverlayLayers,
         maxFeatures,
     },
     emit,

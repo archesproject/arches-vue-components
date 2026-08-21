@@ -152,7 +152,9 @@ export function useMapContext(
         maxZoom?: number;
         basemap?: string;
         allowedGeometryTypes?: string[];
-        overlayLayers?: (candidateOverlayLayers: MapLayer[]) => MapLayer[];
+        resolveOverlayLayers?: (
+            candidateOverlayLayers: MapLayer[],
+        ) => MapLayer[];
         maxFeatures?: number;
     },
     emit: MapComponentEmit,
@@ -392,7 +394,7 @@ export function useMapContext(
                 ...((mapData?.resource_map_layers ?? []) as MapLayer[]),
             ];
             overlays.value = (
-                props.overlayLayers ?? resolveDefaultOverlayLayers
+                props.resolveOverlayLayers ?? resolveDefaultOverlayLayers
             )(candidateOverlayLayers);
 
             if (mapData?.default_bounds) {
