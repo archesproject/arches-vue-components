@@ -49,16 +49,16 @@ if (resolvedAliasedNodeData.value) {
     emit("initialized", resolvedAliasedNodeData.value);
     emit("ready");
 } else {
-    const stopWatchingForInitialAliasedNodeData = watch(
+    watch(
         resolvedAliasedNodeData,
         (updatedAliasedNodeData) => {
             if (!updatedAliasedNodeData) {
                 return;
             }
-            stopWatchingForInitialAliasedNodeData();
             emit("initialized", updatedAliasedNodeData);
             emit("ready");
         },
+        { once: true },
     );
 }
 

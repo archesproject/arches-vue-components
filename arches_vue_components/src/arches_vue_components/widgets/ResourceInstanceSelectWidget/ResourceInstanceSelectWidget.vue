@@ -66,16 +66,22 @@ watch([loading, isEditorLoading], ([resolverLoading, editorLoading]) =>
 
 if (resolvedAliasedNodeData.value) {
     emit("initialized", resolvedAliasedNodeData.value);
+    if (mode === VIEW) {
+        emit("ready");
+    }
 } else {
-    const stopWatchingForInitialAliasedNodeData = watch(
+    watch(
         resolvedAliasedNodeData,
         (updatedAliasedNodeData) => {
             if (!updatedAliasedNodeData) {
                 return;
             }
-            stopWatchingForInitialAliasedNodeData();
             emit("initialized", updatedAliasedNodeData);
+            if (mode === VIEW) {
+                emit("ready");
+            }
         },
+        { once: true },
     );
 }
 

@@ -12,7 +12,7 @@ import { EDIT, VIEW } from "@/arches_vue_components/widgets/constants.ts";
 import type { ConceptAliasedNodeData } from "@/arches_vue_components/datatypes/concept/types.ts";
 import type { ConceptRadioWidgetProps } from "@/arches_vue_components/widgets/ConceptRadioWidget/types.ts";
 
-const { aliasedNodeData, graphSlug, nodeAlias, value } =
+const { aliasedNodeData, graphSlug, nodeAlias, value, mode } =
     defineProps<ConceptRadioWidgetProps>();
 
 const emit = defineEmits<{
@@ -55,16 +55,22 @@ watch([loading, isEditorLoading], ([resolverLoading, editorLoading]) =>
 
 if (resolvedAliasedNodeData.value) {
     emit("initialized", resolvedAliasedNodeData.value);
+    if (mode === VIEW) {
+        emit("ready");
+    }
 } else {
-    const stopWatchingForInitialAliasedNodeData = watch(
+    watch(
         resolvedAliasedNodeData,
         (updatedAliasedNodeData) => {
             if (!updatedAliasedNodeData) {
                 return;
             }
-            stopWatchingForInitialAliasedNodeData();
             emit("initialized", updatedAliasedNodeData);
+            if (mode === VIEW) {
+                emit("ready");
+            }
         },
+        { once: true },
     );
 }
 

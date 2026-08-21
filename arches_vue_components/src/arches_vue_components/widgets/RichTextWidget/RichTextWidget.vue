@@ -15,7 +15,7 @@ import type {
 } from "@/arches_vue_components/datatypes/string/types.ts";
 import type { RichTextWidgetProps } from "@/arches_vue_components/widgets/RichTextWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<RichTextWidgetProps>();
+const { aliasedNodeData, value, mode } = defineProps<RichTextWidgetProps>();
 
 const emit = defineEmits<{
     "update:value": [updatedValue: Record<string, LanguageValue> | null];
@@ -31,6 +31,9 @@ const resolvedAliasedNodeData = computed(
 
 onMounted(() => {
     emit("initialized", resolvedAliasedNodeData.value);
+    if (mode === VIEW) {
+        emit("ready");
+    }
 });
 
 function onUpdateAliasedNodeData(

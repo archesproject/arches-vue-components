@@ -12,7 +12,7 @@ import { EDIT, VIEW } from "@/arches_vue_components/widgets/constants.ts";
 import type { ConceptListAliasedNodeData } from "@/arches_vue_components/datatypes/concept-list/types.ts";
 import type { ConceptCheckboxWidgetProps } from "@/arches_vue_components/widgets/ConceptCheckboxWidget/types.ts";
 
-const { aliasedNodeData, graphSlug, nodeAlias, value } =
+const { aliasedNodeData, graphSlug, nodeAlias, value, mode } =
     defineProps<ConceptCheckboxWidgetProps>();
 
 const emit = defineEmits<{
@@ -53,16 +53,22 @@ watch([loading, isEditorLoading], ([resolverLoading, editorLoading]) =>
 
 if (resolvedAliasedNodeData.value) {
     emit("initialized", resolvedAliasedNodeData.value);
+    if (mode === VIEW) {
+        emit("ready");
+    }
 } else {
-    const stopWatchingForInitialAliasedNodeData = watch(
+    watch(
         resolvedAliasedNodeData,
         (updatedAliasedNodeData) => {
             if (!updatedAliasedNodeData) {
                 return;
             }
-            stopWatchingForInitialAliasedNodeData();
             emit("initialized", updatedAliasedNodeData);
+            if (mode === VIEW) {
+                emit("ready");
+            }
         },
+        { once: true },
     );
 }
 

@@ -15,7 +15,7 @@ import type {
 } from "@/arches_vue_components/datatypes/string/types.ts";
 import type { TextWidgetProps } from "@/arches_vue_components/widgets/TextWidget/types.ts";
 
-const { aliasedNodeData, value } = defineProps<TextWidgetProps>();
+const { aliasedNodeData, value, mode } = defineProps<TextWidgetProps>();
 
 const emit = defineEmits<{
     "update:value": [updatedValue: Record<string, LanguageValue> | null];
@@ -31,6 +31,9 @@ const resolvedAliasedNodeData = computed(
 
 onMounted(() => {
     emit("initialized", resolvedAliasedNodeData.value);
+    if (mode === VIEW) {
+        emit("ready");
+    }
 });
 
 function onUpdateAliasedNodeData(
