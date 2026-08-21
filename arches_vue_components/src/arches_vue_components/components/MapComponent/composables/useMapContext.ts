@@ -11,6 +11,7 @@ import {
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import geojsonExtent from "@mapbox/geojson-extent";
 import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 import { uniqBy } from "es-toolkit";
 import { useToast } from "primevue/usetoast";
@@ -29,6 +30,7 @@ import {
     DIRECT_SELECT,
     DRAW_CREATE_EVENT,
     DRAW_DELETE_EVENT,
+    DRAW_LAYER_ID_PREFIX,
     DRAW_LINE_STRING,
     DRAW_POINT,
     DRAW_POLYGON,
@@ -75,7 +77,11 @@ export interface MapComponentEmit {
     (event: "update:value", value: FeatureCollection): void;
     (event: "update:isLoading", isLoading: boolean): void;
     (event: "update:overlays"): void;
-    (event: "initialized", value: FeatureCollection): void;
+    // Fires once the underlying maplibregl.Map is actually usable. Distinct
+    // from the widget-contract "initialized" event fired by *WidgetEditor/
+    // *WidgetViewer components, which fires immediately and means "has an
+    // initial value," not "is ready."
+    (event: "ready"): void;
 }
 
 export const mapContextKey: InjectionKey<MapContext> = Symbol("mapContext");
@@ -93,6 +99,30 @@ export function useResolvedMapContext(
     }
 
     return resolvedContext;
+}
+
+// MapLibre reads the container's size once, at construction time; building it while the container is still hidden breaks click hit-testing in ways a later resize() doesn't repair.
+function waitForNonZeroContainerSize(container: HTMLElement): Promise<void> {
+    return new Promise((resolve) => {
+        const { width, height } = container.getBoundingClientRect();
+        if (width > 0 && height > 0) {
+            resolve();
+            return;
+        }
+
+        const observer = new ResizeObserver((entries) => {
+            const entry = entries[0];
+            if (
+                entry &&
+                entry.contentRect.width > 0 &&
+                entry.contentRect.height > 0
+            ) {
+                observer.disconnect();
+                resolve();
+            }
+        });
+        observer.observe(container);
+    });
 }
 
 export function useMapContext(
@@ -175,6 +205,8 @@ export function useMapContext(
     );
 
     onMounted(async () => {
+        await waitForNonZeroContainerSize(mapContainer.value!);
+
         map.value = new maplibregl.Map({
             container: mapContainer.value!,
             zoom: props.zoom ?? 2,
@@ -204,6 +236,8 @@ export function useMapContext(
                     { padding: 20 },
                 );
             }
+
+            emit("ready");
         });
         map.value.on(STYLE_LOAD_EVENT, () => {
             map.value!.resize();
@@ -215,10 +249,6 @@ export function useMapContext(
         });
 
         await loadMapData();
-        emit(
-            "initialized",
-            props.value ?? { type: "FeatureCollection", features: [] },
-        );
     });
 
     onUnmounted(() => {
@@ -227,14 +257,30 @@ export function useMapContext(
 
     function handleMapClick(event: MapMouseEvent): void {
         if (!overlayLayerIds.value.length) return;
+        if (isActivelyDrawingOrEditing()) return;
 
         const features = map.value!.queryRenderedFeatures(event.point, {
             layers: overlayLayerIds.value,
         });
 
         if (!features.length) return;
+        if (isDrawnFeatureOnTop(event.point)) return;
 
         openFeaturePopup(deduplicateFeatures(features), event.lngLat);
+    }
+
+    function isActivelyDrawingOrEditing(): boolean {
+        return !!draw && draw.getMode() !== SIMPLE_SELECT;
+    }
+
+    // queryRenderedFeatures returns the topmost feature first, so this only
+    // suppresses the popup when the drawn feature is actually on top --
+    // e.g. a polygon's fill -- not whenever one merely overlaps the click,
+    // which would make anything geographically inside a drawn shape
+    // permanently unclickable.
+    function isDrawnFeatureOnTop(point: MapMouseEvent["point"]): boolean {
+        const topFeature = map.value!.queryRenderedFeatures(point)[0];
+        return !!topFeature?.layer.id.startsWith(DRAW_LAYER_ID_PREFIX);
     }
 
     function deduplicateFeatures(
@@ -315,15 +361,21 @@ export function useMapContext(
                 ...resourceSources,
             ];
 
-            basemaps.value = ((mapData?.basemaps ?? []) as RawBasemap[]).map(
-                (layer) => ({
-                    id: layer.name,
-                    name: layer.title,
-                    value: layer.name,
-                    active: layer.addtomap,
-                    url: layer.url,
-                }),
+            const rawBasemaps = (mapData?.basemaps ?? []) as RawBasemap[];
+            const hasPreferredBasemap = rawBasemaps.some(
+                (layer) => layer.name === props.basemap,
             );
+
+            // Folded into `active` rather than a separate setStyle() call, since assigning basemaps.value below already triggers one via watch(basemaps, ...).
+            basemaps.value = rawBasemaps.map((layer) => ({
+                id: layer.name,
+                name: layer.title,
+                value: layer.name,
+                active: hasPreferredBasemap
+                    ? layer.name === props.basemap
+                    : layer.addtomap,
+                url: layer.url,
+            }));
 
             const configuredOverlays = (
                 (mapData?.map_layers ?? []) as MapLayer[]
@@ -347,17 +399,6 @@ export function useMapContext(
 
             if (mapData?.default_bounds) {
                 defaultBounds = geojsonExtent(mapData.default_bounds);
-            }
-
-            const preferredBasemap =
-                basemaps.value.find(
-                    (basemap) => basemap.value === props.basemap,
-                ) ?? null;
-            const activeBasemap =
-                preferredBasemap ??
-                basemaps.value.find((basemap) => basemap.active);
-            if (activeBasemap?.url) {
-                map.value!.setStyle(activeBasemap.url);
             }
         } catch (error) {
             console.error("Error loading map data:", error);
@@ -384,7 +425,7 @@ export function useMapContext(
                 draw.add(feature);
             }
 
-            updateDrawnFeatures();
+            updateDrawnFeatures({ shouldEmitValueChange: false });
         }
 
         map.value!.on(DRAW_CREATE_EVENT, (drawEvent: DrawEvent) => {
@@ -467,7 +508,11 @@ export function useMapContext(
         });
     }
 
-    async function updateDrawnFeatures(): Promise<void> {
+    async function updateDrawnFeatures(
+        { shouldEmitValueChange }: { shouldEmitValueChange: boolean } = {
+            shouldEmitValueChange: true,
+        },
+    ): Promise<void> {
         const drawnFeatureCollection = draw.getAll() as FeatureCollection;
         drawnFeatures.value = drawnFeatureCollection.features as Feature[];
 
@@ -523,7 +568,9 @@ export function useMapContext(
             console.error("Error updating drawn features:", error);
         }
 
-        emit("update:value", drawnFeatureCollection);
+        if (shouldEmitValueChange) {
+            emit("update:value", drawnFeatureCollection);
+        }
     }
 
     function addOverlayToMap(overlay: MapLayer): void {

@@ -159,5 +159,6 @@ provide(mapContextKey, context);
 .map-container {
     flex: 1;
     min-width: 0;
+    min-height: 0;
 }
 </style>

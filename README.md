@@ -221,6 +221,15 @@ The arches-agnostic map underneath `MapWidget`. See [Customizing the Map](#custo
 | `maxFeatures` | `number` | Rejects drawing/adding features past this count, with an error toast |
 | `renderContext` | `string` | Set to `"search"` to include search-only overlay layers |
 
+`MapComponent` emits:
+
+| Event | Payload | Fires |
+|-------|---------|-------|
+| `update:value` | `FeatureCollection` | Drawn features changed |
+| `update:isLoading` | `boolean` | |
+| `update:overlays` | | Overlay layers changed |
+| `ready` | | Once, when the underlying `maplibregl.Map` is actually usable. Not the same thing as `MapWidget`'s `initialized` event, which fires immediately on mount and just means "has an initial value" |
+
 `MapContext`:
 
 | Name | Type | Description |

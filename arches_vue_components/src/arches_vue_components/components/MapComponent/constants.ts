@@ -8,6 +8,7 @@ export const DEFAULT_FEATURE_POINT_SIZE = 6;
 export const DIRECT_SELECT = "direct_select";
 export const DRAW_CREATE_EVENT = "draw.create";
 export const DRAW_DELETE_EVENT = "draw.delete";
+export const DRAW_LAYER_ID_PREFIX = "gl-draw-";
 export const DRAW_LINE_STRING = "draw_line_string";
 export const DRAW_POINT = "draw_point";
 export const DRAW_POLYGON = "draw_polygon";
