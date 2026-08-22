@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arches-vue-components"
-version = "2.1.0a0"
+version = "2.1.0a1"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "AGPL-3.0-or-later"
