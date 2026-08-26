@@ -192,6 +192,53 @@ Every widget's `aliasedNodeData`/`cardXNodeXWidgetData` prop is typed to one spe
 | `URLWidget` | `URLAliasedNodeData` | `CardXNodeXWidgetData` |
 | `MapWidget` | `GeoJSONFeatureCollectionAliasedNodeData` | `MapCardXNodeXWidgetData` |
 
+#### `@/arches_vue_components/components`
+
+The arches-agnostic map underneath `MapWidget`. See [Customizing the Map](#customizing-the-map) for a full example.
+
+| Export | Description |
+|--------|-------------|
+| `MapComponent` | The map itself: `FeatureCollection` in/out, no `cardXNodeXWidgetData`/`mode` |
+| `MapComponentProps` | Props interface, table below |
+| `MapContext` | Reactive state/actions object every interaction tool reads/writes through |
+| `MapInteractionTool` | Shape of one entry in `interactionTools` |
+| `InteractionsDrawer`, `BasemapPanel`, `OverlayPanel`, `DrawPanel`, `DrawControls`, `BufferControls`, `DrawnFeaturesList`, `ShapefileDropZone`, `FeaturePopup` | The built-in interaction tools and default feature popup, exported for reuse/composition |
+| `useMapContext` | Composable `MapComponent` itself calls; not typically used directly |
+| `useResolvedMapContext(context, componentName)` | Resolves a `MapContext` from a prop, falling back to `inject(mapContextKey)`; what every built-in tool uses so it works both in-tree and passed a `context` explicitly |
+| `resolveDefaultOverlayLayers(candidateOverlayLayers)` | The default `resolveOverlayLayers` resolver `MapComponent` falls back to; compose on top of it (e.g. to also include `searchonly` layers) instead of reimplementing its filter/sort logic |
+| `mapContextKey` | The `provide`/`inject` key `MapComponent` provides `MapContext` under |
+| `useDefaultMapInteractionTools()` | Returns the default Draw/Basemap/Overlays tool set, for composing with your own |
+
+`MapComponentProps`:
+
+| Name | Type | Description |
+|------|------|--------------|
+| `value` | `FeatureCollection \| null` | Drawn features |
+| `zoom`, `pitch`, `bearing`, `centerX`, `centerY`, `minZoom`, `maxZoom` | `number` | Initial camera position/constraints |
+| `basemap` | `string` | Initially active basemap |
+| `allowedGeometryTypes` | `string[]` | Constrains which geometry types can be drawn (filters the default Draw tool's options) |
+| `interactionTools` | `MapInteractionTool[]` | Sidebar tools shown in the drawer; `[]` renders no drawer at all; omitted defaults to Draw/Basemap/Overlays |
+| `featurePopupComponent` | `Component` | Replaces the default click-to-view-resource popup |
+| `maxFeatures` | `number` | Rejects drawing/adding features past this count, with an error toast |
+| `resolveOverlayLayers` | `(candidateOverlayLayers: MapLayer[]) => MapLayer[]` | Resolves the final overlay layer set from the raw fetched candidates (`map_layers` + `resource_map_layers`); omitted defaults to `resolveDefaultOverlayLayers`, which excludes `searchonly` layers. Pass a resolver that also includes `layer.searchonly` layers to show them (see `resolveDefaultOverlayLayers` above) |
+
+`MapComponent` emits:
+
+| Event | Payload | Fires |
+|-------|---------|-------|
+| `update:value` | `FeatureCollection` | Drawn features changed |
+| `update:isLoading` | `boolean` | |
+| `update:overlays` | | Overlay layers changed |
+| `ready` | | Once, when the underlying `maplibregl.Map` is actually usable. Not the same thing as `MapWidget`'s `initialized` event, which fires immediately on mount and just means "has an initial value" |
+
+`MapContext`:
+
+| Name | Type | Description |
+|------|------|--------------|
+| `map` | `ShallowRef<maplibregl.Map \| null>` | The live MapLibre instance |
+| `isLoading`, `basemaps`, `overlays`, `drawnFeatures`, `selectedDrawnFeature`, `allowedGeometryTypes` | | Reactive state. Same values the built-in tools already use |
+| `setDrawMode(mode)`, `selectDrawnFeature(feature)`, `deleteSelectedDrawnFeature()`, `deleteAllDrawnFeatures()`, `setBufferForSelectedFeature(distance, units)`, `addFeatures(features)` | | Actions. Every built-in tool calls these instead of touching MapLibre or mapbox-gl-draw directly |
+
 #### `@/arches_vue_components/generics`
 
 `GenericWidget`/`GenericCard` resolve their concrete component at runtime instead of being imported directly — that is the "generic" here, not a TypeScript `<T>`.
@@ -389,6 +436,78 @@ export type { RatingWidgetProps } from "@/arches_vue_components/widgets/RatingWi
 ```
 
 6. Register it — see [Extending Arches Vue Components](#extending-arches-vue-components).
+
+## Customizing the Map
+
+`MapWidget` is a thin adapter over `MapComponent`. It translates a node's `cardXNodeXWidgetData.config` into `MapComponent`'s props and back. If you're not editing a resource at all, say you're building a search filter, embed `MapComponent` directly and skip the adapter.
+
+The example below replaces the default interactions drawer with a custom floating panel, replaces the feature-click popup, and constrains drawing to a single point:
+
+```vue
+<script setup lang="ts">
+import { ref, useTemplateRef } from "vue";
+
+import { MapComponent } from "@/arches_vue_components/components";
+
+import MyDrawTools from "./MyDrawTools.vue";
+import MySearchResultPopup from "./MySearchResultPopup.vue";
+
+import type { FeatureCollection } from "geojson";
+import type { MapInteractionTool } from "@/arches_vue_components/components";
+
+const NO_INTERACTION_TOOLS: MapInteractionTool[] = [];
+const MAX_DRAWN_FEATURES = 1;
+const ALLOWED_GEOMETRY_TYPES = ["point"];
+
+const value = ref<FeatureCollection | null>(null);
+const mapRef = useTemplateRef<InstanceType<typeof MapComponent>>("map");
+</script>
+
+<template>
+    <div class="my-map-shell">
+        <MapComponent
+            ref="map"
+            :value="value"
+            :interaction-tools="NO_INTERACTION_TOOLS"
+            :allowed-geometry-types="ALLOWED_GEOMETRY_TYPES"
+            :max-features="MAX_DRAWN_FEATURES"
+            :feature-popup-component="MySearchResultPopup"
+            @update:value="value = $event"
+        />
+        <!-- Rendered outside MapComponent's own tree entirely -->
+        <MyDrawTools :context="mapRef?.context ?? null" />
+    </div>
+</template>
+
+<style scoped>
+.my-map-shell {
+    position: relative; /* MyDrawTools floats over the map via its own CSS */
+    display: flex;
+    flex: 1;
+}
+</style>
+```
+
+`interactionTools: []` suppresses the built-in drawer entirely, rather than swapping in a different set of tools for it. `context` comes from `MapComponent`'s `defineExpose`, and it's the same reactive `MapContext` every built-in tool already reads and writes: `drawnFeatures`, `selectedDrawnFeature`, actions like `setDrawMode`/`addFeatures`/`deleteAllDrawnFeatures`. So `MyDrawTools` is driving the exact same map state. It can look like a column of buttons, a floating toolbar, whatever you want. The map doesn't care.
+
+`MyDrawTools.vue` and `MySearchResultPopup.vue` are just regular components; the pattern that matters is how they reach `MapContext`:
+
+```vue
+<!-- MyDrawTools.vue -->
+<script setup lang="ts">
+import type { MapContext } from "@/arches_vue_components/components";
+
+const { context } = defineProps<{ context: MapContext | null }>();
+</script>
+
+<template>
+    <div class="floating-draw-tools">
+        <button @click="context?.setDrawMode('point')">Drop a point</button>
+        <button @click="context?.deleteAllDrawnFeatures()">Clear</button>
+    </div>
+</template>
+```
+
 
 ## Extending Arches Vue Components
 
