@@ -41,6 +41,7 @@ const emit = defineEmits<{
     "update:value": [value: unknown];
     "update:aliasedNodeData": [aliasedNodeData: AliasedNodeData];
     initialized: [aliasedNodeData: AliasedNodeData];
+    ready: [];
 }>();
 
 defineOptions({ inheritAttrs: false });
@@ -209,6 +210,7 @@ function onWidgetInitialized(aliasedNodeData: AliasedNodeData) {
                             }
                         "
                         @initialized="onWidgetInitialized"
+                        @ready="emit('ready')"
                     />
                 </div>
             </GenericFormField>
@@ -230,6 +232,7 @@ function onWidgetInitialized(aliasedNodeData: AliasedNodeData) {
                     emit('update:aliasedNodeData', $event)
                 "
                 @initialized="emit('initialized', $event)"
+                @ready="emit('ready')"
             />
         </template>
     </div>

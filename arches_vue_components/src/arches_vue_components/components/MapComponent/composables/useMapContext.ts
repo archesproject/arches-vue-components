@@ -41,7 +41,6 @@ import {
     GEOMETRY_TYPE_POLYGON,
     IDLE,
     METERS,
-    SEARCH_RENDER_CONTEXT,
     SIMPLE_SELECT,
     STYLE_LOAD_EVENT,
 } from "@/arches_vue_components/components/MapComponent/constants.ts";
@@ -125,6 +124,22 @@ function waitForNonZeroContainerSize(container: HTMLElement): Promise<void> {
     });
 }
 
+export function resolveDefaultOverlayLayers(
+    candidateOverlayLayers: MapLayer[],
+): MapLayer[] {
+    return candidateOverlayLayers
+        .filter(
+            (layer) =>
+                layer.isoverlay &&
+                layer.activated !== false &&
+                !layer.searchonly,
+        )
+        .sort(
+            (overlayA, overlayB) =>
+                (overlayA.sortorder ?? 0) - (overlayB.sortorder ?? 0),
+        );
+}
+
 export function useMapContext(
     props: {
         value: FeatureCollection | null;
@@ -137,7 +152,9 @@ export function useMapContext(
         maxZoom?: number;
         basemap?: string;
         allowedGeometryTypes?: string[];
-        renderContext?: string;
+        resolveOverlayLayers?: (
+            candidateOverlayLayers: MapLayer[],
+        ) => MapLayer[];
         maxFeatures?: number;
     },
     emit: MapComponentEmit,
@@ -270,17 +287,12 @@ export function useMapContext(
     }
 
     function isActivelyDrawingOrEditing(): boolean {
-        return !!draw && draw.getMode() !== SIMPLE_SELECT;
+        return draw && draw.getMode() !== SIMPLE_SELECT;
     }
 
-    // queryRenderedFeatures returns the topmost feature first, so this only
-    // suppresses the popup when the drawn feature is actually on top --
-    // e.g. a polygon's fill -- not whenever one merely overlaps the click,
-    // which would make anything geographically inside a drawn shape
-    // permanently unclickable.
     function isDrawnFeatureOnTop(point: MapMouseEvent["point"]): boolean {
         const topFeature = map.value!.queryRenderedFeatures(point)[0];
-        return !!topFeature?.layer.id.startsWith(DRAW_LAYER_ID_PREFIX);
+        return topFeature?.layer.id.startsWith(DRAW_LAYER_ID_PREFIX);
     }
 
     function deduplicateFeatures(
@@ -377,25 +389,13 @@ export function useMapContext(
                 url: layer.url,
             }));
 
-            const configuredOverlays = (
-                (mapData?.map_layers ?? []) as MapLayer[]
-            ).filter(
-                (layer) =>
-                    layer.isoverlay &&
-                    layer.activated !== false &&
-                    (!layer.searchonly ||
-                        props.renderContext === SEARCH_RENDER_CONTEXT),
-            );
-            const resourceLayers = (mapData?.resource_map_layers ??
-                []) as MapLayer[];
-            const fetchedOverlays = [
-                ...configuredOverlays,
-                ...resourceLayers,
-            ].sort(
-                (overlayA, overlayB) =>
-                    (overlayA.sortorder ?? 0) - (overlayB.sortorder ?? 0),
-            );
-            overlays.value = fetchedOverlays;
+            const candidateOverlayLayers = [
+                ...((mapData?.map_layers ?? []) as MapLayer[]),
+                ...((mapData?.resource_map_layers ?? []) as MapLayer[]),
+            ];
+            overlays.value = (
+                props.resolveOverlayLayers ?? resolveDefaultOverlayLayers
+            )(candidateOverlayLayers);
 
             if (mapData?.default_bounds) {
                 defaultBounds = geojsonExtent(mapData.default_bounds);

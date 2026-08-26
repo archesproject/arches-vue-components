@@ -14,6 +14,7 @@ export { useInteractionPanel } from "@/arches_vue_components/components/MapCompo
 export {
     useMapContext,
     useResolvedMapContext,
+    resolveDefaultOverlayLayers,
     mapContextKey,
 } from "@/arches_vue_components/components/MapComponent/composables/useMapContext.ts";
 
