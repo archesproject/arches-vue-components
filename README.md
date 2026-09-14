@@ -1,6 +1,6 @@
 # Arches Vue Components
 
-A Vue 3 / PrimeVue component library for building custom applications with Arches versions 8.2.0+
+A Vue 3 / OpenVue component library for building custom applications with Arches versions 8.2.0+
 
 ## Installation
 
@@ -67,7 +67,7 @@ createVueApplication({ component: MyComponent }).then(app => app.mount('#app'));
 
 ### Widgets
 
-`GenericWidget` looks up the widget mapped to a node (see [Extending Arches Vue Components](#extending-arches-vue-components)) and resolves the real component at runtime. In `edit` mode it wraps the resolved widget in a `GenericFormField`, which registers the node as a PrimeVue Forms `FormField` keyed by `nodeAlias`, ties its dirty/touched state and validation errors into an ancestor `<Form>`, and renders those errors:
+`GenericWidget` looks up the widget mapped to a node (see [Extending Arches Vue Components](#extending-arches-vue-components)) and resolves the real component at runtime. In `edit` mode it wraps the resolved widget in a `GenericFormField`, which registers the node as a OpenVue Forms `FormField` keyed by `nodeAlias`, ties its dirty/touched state and validation errors into an ancestor `<Form>`, and renders those errors:
 
 ```vue
 <script setup lang="ts">
@@ -131,7 +131,7 @@ const nodeData = ref<StringAliasedNodeData | null>(null);
 
 ### Cards
 
-`GenericCard` renders a whole nodegroup. It fetches the tile (`fetchTileData`) and every node's widget config, then renders `GenericCardEditor` or `GenericCardViewer` depending on `mode`. The editor wraps a PrimeVue `Form` and renders one `GenericWidget` per node, and saves the collected tile with `upsertTile` — from its own save button, or by calling `.save()` on it directly (exposed via `defineExpose`).
+`GenericCard` renders a whole nodegroup. It fetches the tile (`fetchTileData`) and every node's widget config, then renders `GenericCardEditor` or `GenericCardViewer` depending on `mode`. The editor wraps a OpenVue `Form` and renders one `GenericWidget` per node, and saves the collected tile with `upsertTile` — from its own save button, or by calling `.save()` on it directly (exposed via `defineExpose`).
 
 ```vue
 <script setup lang="ts">
@@ -302,7 +302,7 @@ The arches-agnostic map underneath `MapWidget`. See [Customizing the Map](#custo
 | Name | Type | Description |
 |------|------|--------------|
 | `DEFAULT_THEME` | `ArchesThemeConfiguration` | Theme `createVueApplication` uses when `themeConfiguration` is not passed |
-| `ArchesThemeConfiguration` | — | PrimeVue theme configuration shape |
+| `ArchesThemeConfiguration` | — | OpenVue theme configuration shape |
 
 
 ## Creating a Custom Widget
@@ -377,7 +377,7 @@ function onUpdateAliasedNodeData(updated: NumberAliasedNodeData) {
 <!-- components/RatingWidgetEditor.vue -->
 <script setup lang="ts">
 import { onMounted } from "vue";
-import Rating from "primevue/rating";
+import Rating from "openvue/rating";
 
 import { buildNumberAliasedNodeData } from "@/arches_vue_components/datatypes/number/utils.ts";
 
