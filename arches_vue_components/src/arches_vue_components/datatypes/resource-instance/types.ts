@@ -21,7 +21,8 @@ export interface ResourceInstanceSelectOption {
     resource_id: string;
 }
 
-export interface ResourceInstanceCardXNodeXWidgetData extends CardXNodeXWidgetData {
+export interface ResourceInstanceCardXNodeXWidgetData
+    extends CardXNodeXWidgetData {
     node: CardXNodeXWidgetData["node"] & {
         config: {
             graphs?:
