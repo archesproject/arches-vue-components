@@ -57,7 +57,7 @@ const shouldShowRequiredAsterisk = computed(() => {
     font-weight: 600;
 }
 .widget-label .pi-asterisk {
-    font-size: 0.75rem; 
-    padding-top: 0.25rem
+    font-size: 0.75rem;
+    padding-top: 0.25rem;
 }
 </style>
